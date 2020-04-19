@@ -55,4 +55,8 @@ public class Student extends Person {
         this.parents.remove(parent);
     }
 
+    public MyCircularDoublyLinkedList getParents(){
+        return this.parents;
+    }
+
 }

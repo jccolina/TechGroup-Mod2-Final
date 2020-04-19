@@ -24,6 +24,9 @@ public class Main {
         String parentId = school.addParent("Juan Perez", "4578899-A", 45,"Male", "Av. Blanco Galindo #018", "+5914445555","myemail@mail.com",
                 "Av. Melchor Edif Imperial Dep #26", "+5914445555","myemaul@mail.com");
 
+        String parentId2 = school.addParent("Angelica Lopez", "56767777", 40,"Female", "Av. Blanco Galindo #018", "+5915666666","angie@mail.com",
+                "Av. Melchor Edif Imperial Dep #26", "+5914466666","angie@mail.com");
+
         // Register Student
         String studentId1 = school.enrollStudent("Ana Perez", "3455555",15, "Female", "Av. Blanco Galindo #018", "+5914445555","myemail@mail.com", courseId);
         school.assignParent(studentId1, parentId);
@@ -36,6 +39,7 @@ public class Main {
         // Register Student
         String studentId2 = school.enrollStudent("Carmen Cespedes", "3455555",16, "Female", "Av. Blanco Galindo #018", "+5914445555","myemail@mail.com", courseId);
         school.assignParent(studentId2, parentId);
+        school.assignParent(studentId2, parentId2);
         // Register Grade to Student
         // NOTIFY
         school.setGrade(20, subj1Id, studentId2, courseId);
@@ -72,5 +76,7 @@ public class Main {
         System.out.println("NOTIFY" +Arrays.toString(school.filterStudentsByState(courseId, "NOTIFY")));
         // Get SCHOLARSHIP
         System.out.println("SCHOLARSHIP" +Arrays.toString(school.filterStudentsByState(courseId, "SCHOLARSHIP")));
+
+        school.sendNotification();
     }
 }

@@ -1,6 +1,8 @@
 package colinajose.model.schoolEntities;
 
 import colinajose.data.DataFileIO;
+import colinajose.model.notification.Device;
+import colinajose.model.people.Person;
 import datastructures.arraylist.MyArrayList;
 import datastructures.circulardoublylinkedlist.MyCircularDoublyLinkedList;
 import colinajose.model.base.BaseEntity;
@@ -94,6 +96,8 @@ public class School extends BaseEntity implements Observable {
         } else {
             kardex.addStudent(student);
             this.students.add(student);
+            Device device = new Device(this, student);
+            registerObserver(device);
             return student.getId();
         }
     }
@@ -145,17 +149,8 @@ public class School extends BaseEntity implements Observable {
         this.contacts.add(contact);
         return contact.getId();
     }
-    private void updateStudents() {
-//        Kardex kardex;
-//        Course course = kardex.getCourse();
-//        MyCircularDoublyLinkedList<Student> students = kardex.getStudents();
-//        GradingScale gradingScale = course.getGradingScale();
-//        for (int i = 0; i < students.size(); i++) {
-//            Student student = students.get(i);
-//            if(student.getGradeAverage() >= gradingScale.getScholarshipGrade()){
-//                student.setState("SCHOLARSHIP");
-//            }
-//        }
+    public void sendNotification(){
+        notifyObservers();
     }
 
     public String addTeacher(String name, String CI, Integer age, String gender, String address, String phone, String email) {
@@ -206,7 +201,7 @@ public class School extends BaseEntity implements Observable {
     }
 
     public void setGradingScale(GradingScale gradingScale, Course course) {
-        updateStudents();
+
     }
 
     private <T> T getElement(MyCircularDoublyLinkedList<T> list, T element) {
@@ -236,6 +231,15 @@ public class School extends BaseEntity implements Observable {
         }
     }
 
+    @Override
+    public Object getState(Object owner) {
+        if(owner instanceof Student){
+            Student student = (Student) owner;
+            return student.getState();
+        }else{
+            return "";
+        }
+    }
     public Contact getContact() {
         return contact;
     }
