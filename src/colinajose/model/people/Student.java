@@ -22,8 +22,21 @@ public class Student extends Person {
         return state.toString();
     }
 
-    public void setState(String state) {
-        this.state = State.valueOf(state);
+    public boolean setState(String state) {
+        if(stateExist(state)){
+            this.state = State.valueOf(state);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean stateExist(String state) {
+        for (State currentState: State.values()) {
+            if(currentState.name().equals(state)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public float getGradeAverage() {

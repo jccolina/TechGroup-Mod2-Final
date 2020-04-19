@@ -1,5 +1,7 @@
 package colinajose.model.schoolEntities;
 
+import colinajose.data.DataFileIO;
+import datastructures.arraylist.MyArrayList;
 import datastructures.circulardoublylinkedlist.MyCircularDoublyLinkedList;
 import colinajose.model.base.BaseEntity;
 import colinajose.model.notification.Observable;
@@ -11,6 +13,7 @@ import colinajose.model.people.Principal;
 import colinajose.model.people.Secretary;
 import colinajose.model.people.Student;
 import colinajose.model.people.Teacher;
+import datastructures.hashmap.MyHashMap;
 
 public class School extends BaseEntity implements Observable {
     private MyCircularDoublyLinkedList<Student> students;
@@ -20,8 +23,10 @@ public class School extends BaseEntity implements Observable {
     private MyCircularDoublyLinkedList<Teacher> teachers;
     private MyCircularDoublyLinkedList<Observer> devices;
     private MyCircularDoublyLinkedList<Employee> staff;
+    private MyArrayList<Contact> contacts;
     private Principal principal;
     private Secretary secretary;
+    private DataFileIO dataFileIO;
 
     private Contact contact;
     private String name;
@@ -36,12 +41,53 @@ public class School extends BaseEntity implements Observable {
         this.teachers = new MyCircularDoublyLinkedList<>();
         this.devices = new MyCircularDoublyLinkedList<>();
         this.staff = new MyCircularDoublyLinkedList<>();
+        this.contacts = new MyArrayList<>();
+        this.dataFileIO = new DataFileIO();
     }
 
+    public MyArrayList<MyHashMap<String, String>> readFile(String fileType, String path){
+        MyHashMap<String, String> parameters = new MyHashMap<>();
+        parameters.put("path", path);
+        return this.dataFileIO.readData(fileType, parameters);
+    }
+
+    public void setGradingScale(double expelledGrade, double notifyGrade, double scholarshipGrade, String courseId){
+        Course course = searchElementById(courseId, this.courses);
+        Kardex kardex = getElement(this.kardexes, new Kardex(course));
+        kardex.setGradingScale(expelledGrade, notifyGrade, scholarshipGrade);
+    }
+
+    public String[] getStudentsAverage(String courseId){
+        Course course = searchElementById(courseId, this.courses);
+        Kardex kardex = getElement(this.kardexes, new Kardex(course));
+        kardex.computeAverageGrades();
+        MyArrayList<MyArrayList> averages = kardex.getSortedAverages();
+        String[] sortedAverages = new String[averages.get(0).size()];
+        for (int i = 0; i < averages.get(0).size(); i++) {
+            sortedAverages[i] = averages.get(0).get(i) + ":" + averages.get(1).get(i);
+        }
+        return sortedAverages;
+    }
+    public void updateStudentsState(String courseId){
+        Course course = searchElementById(courseId, this.courses);
+        Kardex kardex = getElement(this.kardexes, new Kardex(course));
+        kardex.computeAverageGrades();
+        kardex.computeStudentsState();
+    }
+    public String[] filterStudentsByState(String courseId, String state){
+        Course course = searchElementById(courseId, this.courses);
+        Kardex kardex = getElement(this.kardexes, new Kardex(course));
+        MyCircularDoublyLinkedList<Student> studentsFiltered = kardex.filterStudents(state);
+        String[] result = new String[studentsFiltered.size()];
+        for (int i = 0; i < studentsFiltered.size(); i++) {
+            result[i] = studentsFiltered.get(i).getName();
+        }
+        return result;
+    }
     public String enrollStudent(String name, String ci, Integer age, String gender, String address, String phone, String email, String courseId) {
         Contact contact = new Contact(address, phone, email);
         Student student = new Student(name, ci, age, gender, contact);
-        Course course = searchElementById(courseId, this.courses);//getElement(this.courses, );
+        Course course = searchElementById(courseId, this.courses);
         Kardex kardex = getElement(this.kardexes, new Kardex(course));
         if (kardex == null) {
             return null;
@@ -92,6 +138,12 @@ public class School extends BaseEntity implements Observable {
             return true;
         }
         return false;
+    }
+    public String registerContact(String address, String phone, String email){
+        String contactId;
+        Contact contact = new Contact(address, phone, email);
+        this.contacts.add(contact);
+        return contact.getId();
     }
     private void updateStudents() {
 //        Kardex kardex;

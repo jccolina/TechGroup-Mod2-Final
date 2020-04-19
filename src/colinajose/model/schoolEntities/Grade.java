@@ -5,9 +5,9 @@ import colinajose.model.people.Student;
 
 public class Grade extends BaseEntity {
     private Student student;
-    private float finalGrade;
+    private double finalGrade;
 
-    public Grade(Student student, float finalGrade) {
+    public Grade(Student student, double finalGrade) {
         this.student = student;
         this.finalGrade = finalGrade;
     }
@@ -20,7 +20,7 @@ public class Grade extends BaseEntity {
         this.student = student;
     }
 
-    public float getFinalGrade() {
+    public double getFinalGrade() {
         return finalGrade;
     }
 

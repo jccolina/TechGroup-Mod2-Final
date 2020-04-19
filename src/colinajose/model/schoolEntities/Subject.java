@@ -1,5 +1,6 @@
 package colinajose.model.schoolEntities;
 
+import colinajose.model.people.Student;
 import datastructures.circulardoublylinkedlist.MyCircularDoublyLinkedList;
 import colinajose.model.base.BaseEntity;
 import colinajose.model.people.Teacher;
@@ -66,5 +67,16 @@ public class Subject extends BaseEntity {
             }
         }
         return false;
+    }
+
+    public double getGrade(Student student) {
+        double average = 0;
+        for (int i = 0; i < grades.size(); i++) {
+            Grade grade = grades.get(i);
+            if(grade.getStudent().equals(student)){
+                average = grade.getFinalGrade();
+            }
+        }
+        return average;
     }
 }
