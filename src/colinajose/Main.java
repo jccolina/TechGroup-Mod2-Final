@@ -78,5 +78,16 @@ public class Main {
         System.out.println("SCHOLARSHIP" +Arrays.toString(school.filterStudentsByState(courseId, "SCHOLARSHIP")));
 
         school.sendNotification();
+
+        // Submit grades in JSON format
+        System.out.println("Submitting grades, result: "+school.submitGrades("F:\\mnns\\school\\TechGroup-Mod2-Final\\src\\colinajose\\resources\\gradesCSV.csv", "CSV", courseId, subj1Id));
+        // Get average
+        System.out.println("AVERAGES sorted higher to lower: \n"+ Arrays.toString(school.getStudentsAverage(courseId)));
+
+        // Save averages grades as CSV
+        System.out.println(school.saveGrades(courseId, "F:\\mnns\\school\\TechGroup-Mod2-Final\\src\\colinajose\\resources\\output.csv","CSV"));
+
+        // Save averages grades as JSON
+        System.out.println(school.saveGrades(courseId, "F:\\mnns\\school\\TechGroup-Mod2-Final\\src\\colinajose\\resources\\output.json","JSON"));
     }
 }

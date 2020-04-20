@@ -54,6 +54,15 @@ public class Subject extends BaseEntity {
         this.grades.add(grade);
     }
 
+    public boolean addSingleGrade(Student student, double grade){
+        Grade newGrade = new Grade(student, grade);
+        if(this.grades.add(newGrade)==null){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
     public void addSingleSchedule(String schedule){
         this.schedule.add(schedule);
     }

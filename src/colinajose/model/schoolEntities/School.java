@@ -47,19 +47,62 @@ public class School extends BaseEntity implements Observable {
         this.dataFileIO = new DataFileIO();
     }
 
-    public MyArrayList<MyHashMap<String, String>> readFile(String fileType, String path){
+    private MyArrayList<MyHashMap<String, String>> readFile(String fileType, String path) {
         MyHashMap<String, String> parameters = new MyHashMap<>();
         parameters.put("path", path);
         return this.dataFileIO.readData(fileType, parameters);
     }
 
-    public void setGradingScale(double expelledGrade, double notifyGrade, double scholarshipGrade, String courseId){
+    public boolean submitGrades(String path, String fileType, String courseId, String subjectId) {
+        Course course = searchElementById(courseId, this.courses);
+        Kardex kardex = getElement(this.kardexes, new Kardex(course));
+        MyArrayList<MyHashMap<String, String>> entries = readFile(fileType, path);
+        boolean submittedDone = false;
+        for (int i = 0; i < entries.size(); i++) {
+            MyHashMap<String, String> entry = entries.get(i);
+            String studentName = entry.get("Name");
+            String studentId = searchStudentByName(studentName);
+            String grade = entry.get("Grade");
+            submittedDone = kardex.addGrade(subjectId, studentId, grade);
+        }
+
+        return submittedDone;
+    }
+
+    public boolean saveGrades(String courseId, String path, String fileType) {
+        Course course = searchElementById(courseId, this.courses);
+        Kardex kardex = getElement(this.kardexes, new Kardex(course));
+        kardex.computeAverageGrades();
+        MyArrayList<MyHashMap<String, String>> entries = new MyArrayList<>();
+        MyArrayList<MyArrayList> averages = kardex.getSortedAverages();
+        for (int i = 0; i < averages.get(0).size(); i++) {
+            MyHashMap entry = new MyHashMap();
+            entry.put("Name", averages.get(0).get(i));
+            entry.put("Grade", averages.get(1).get(i).toString());
+            entries.add(entry);
+        }
+        MyHashMap parameters = new MyHashMap<String, String>();
+        parameters.put("path", path);
+        return dataFileIO.writeData(fileType, parameters, entries);
+    }
+
+    private String searchStudentByName(String studentName) {
+        for (int i = 0; i < students.size(); i++) {
+            Student student = students.get(i);
+            if (student.getName().equals(studentName)) {
+                return student.getId();
+            }
+        }
+        return null;
+    }
+
+    public void setGradingScale(double expelledGrade, double notifyGrade, double scholarshipGrade, String courseId) {
         Course course = searchElementById(courseId, this.courses);
         Kardex kardex = getElement(this.kardexes, new Kardex(course));
         kardex.setGradingScale(expelledGrade, notifyGrade, scholarshipGrade);
     }
 
-    public String[] getStudentsAverage(String courseId){
+    public String[] getStudentsAverage(String courseId) {
         Course course = searchElementById(courseId, this.courses);
         Kardex kardex = getElement(this.kardexes, new Kardex(course));
         kardex.computeAverageGrades();
@@ -70,13 +113,15 @@ public class School extends BaseEntity implements Observable {
         }
         return sortedAverages;
     }
-    public void updateStudentsState(String courseId){
+
+    public void updateStudentsState(String courseId) {
         Course course = searchElementById(courseId, this.courses);
         Kardex kardex = getElement(this.kardexes, new Kardex(course));
         kardex.computeAverageGrades();
         kardex.computeStudentsState();
     }
-    public String[] filterStudentsByState(String courseId, String state){
+
+    public String[] filterStudentsByState(String courseId, String state) {
         Course course = searchElementById(courseId, this.courses);
         Kardex kardex = getElement(this.kardexes, new Kardex(course));
         MyCircularDoublyLinkedList<Student> studentsFiltered = kardex.filterStudents(state);
@@ -86,6 +131,7 @@ public class School extends BaseEntity implements Observable {
         }
         return result;
     }
+
     public String enrollStudent(String name, String ci, Integer age, String gender, String address, String phone, String email, String courseId) {
         Contact contact = new Contact(address, phone, email);
         Student student = new Student(name, ci, age, gender, contact);
@@ -104,7 +150,7 @@ public class School extends BaseEntity implements Observable {
 
     private <T> T searchElementById(String id, MyCircularDoublyLinkedList<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            if( ((BaseEntity) list.get(i)).getId().equals(id)){
+            if (((BaseEntity) list.get(i)).getId().equals(id)) {
                 return list.get(i);
             }
         }
@@ -134,22 +180,24 @@ public class School extends BaseEntity implements Observable {
         return null;
     }
 
-    public boolean assignParent(String studentId, String parentId){
+    public boolean assignParent(String studentId, String parentId) {
         Parent parent = searchElementById(parentId, this.parents);
         Student student = searchElementById(studentId, this.students);
-        if(parent !=null && student!=null){
+        if (parent != null && student != null) {
             student.addParent(parent);
             return true;
         }
         return false;
     }
-    public String registerContact(String address, String phone, String email){
+
+    public String registerContact(String address, String phone, String email) {
         String contactId;
         Contact contact = new Contact(address, phone, email);
         this.contacts.add(contact);
         return contact.getId();
     }
-    public void sendNotification(){
+
+    public void sendNotification() {
         notifyObservers();
     }
 
@@ -233,13 +281,14 @@ public class School extends BaseEntity implements Observable {
 
     @Override
     public Object getState(Object owner) {
-        if(owner instanceof Student){
+        if (owner instanceof Student) {
             Student student = (Student) owner;
             return student.getState();
-        }else{
+        } else {
             return "";
         }
     }
+
     public Contact getContact() {
         return contact;
     }

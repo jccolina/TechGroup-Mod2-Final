@@ -60,6 +60,21 @@ public class Kardex extends BaseEntity {
         course.setGradingScale(expelled, notify, scholarship);
     }
 
+    public boolean addGrade(String subjectId, String studentId, String grade){
+        Student student = getStudentById(studentId);
+        return this.course.addGrade(subjectId, student, Double.valueOf(grade));
+    }
+
+    private Student getStudentById(String studentId) {
+        for (int i = 0; i < students.size(); i++) {
+            Student student = students.get(i);
+            if(student.getId().equals(studentId)){
+                return student;
+            }
+        }
+        return null;
+    }
+
     public void computeStudentsState() {
         course.computeStudentsState(averages, students);
     }

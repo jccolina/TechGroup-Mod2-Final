@@ -35,7 +35,10 @@ public class Course extends BaseEntity {
     public void setGrade(String grade) {
         this.grade = grade;
     }
-
+    public boolean addGrade(String subjectId, Student student, double grade) {
+        Subject subject = getSubjectById(subjectId);
+        return subject.addSingleGrade(student, grade);
+    }
     public String getYear() {
         return year;
     }
@@ -67,6 +70,16 @@ public class Course extends BaseEntity {
 
     public String getGroup() {
         return group;
+    }
+
+    public Subject getSubjectById(String subjectId){
+        for (int i = 0; i < subjects.size(); i++) {
+            Subject subject = subjects.get(i);
+            if(subject.getId().equals(subjectId)){
+                return subject;
+            }
+        }
+        return null;
     }
 
     public void setGroup(String group) {
