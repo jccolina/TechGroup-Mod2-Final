@@ -54,17 +54,25 @@ public class Subject extends BaseEntity {
         this.grades.add(grade);
     }
 
-    public boolean addSingleGrade(Student student, double grade){
+    public void addSingleGrade(Student student, double grade){
         Grade newGrade = new Grade(student, grade);
-        if(this.grades.add(newGrade)==null){
-            return false;
-        }else{
-            return true;
-        }
+        this.grades.add(newGrade);
     }
 
     public void addSingleSchedule(String schedule){
         this.schedule.add(schedule);
+    }
+
+    public double getGrade(Student student) {
+        double finalGrade = 0;
+        for (int i = 0; i < grades.size(); i++) {
+            Grade grade = grades.get(i);
+            if(grade.getStudent().equals(student)){
+                finalGrade = grade.getFinalGrade();
+                break;
+            }
+        }
+        return finalGrade;
     }
 
     @Override
@@ -78,14 +86,4 @@ public class Subject extends BaseEntity {
         return false;
     }
 
-    public double getGrade(Student student) {
-        double average = 0;
-        for (int i = 0; i < grades.size(); i++) {
-            Grade grade = grades.get(i);
-            if(grade.getStudent().equals(student)){
-                average = grade.getFinalGrade();
-            }
-        }
-        return average;
-    }
 }
