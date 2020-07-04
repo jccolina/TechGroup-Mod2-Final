@@ -1,7 +1,5 @@
 package colinajose.model.schoolEntities;
 
-import colinajose.data.DataFileIO;
-import colinajose.model.notification.SchoolObservable;
 import datastructures.circulardoublylinkedlist.MyCircularDoublyLinkedList;
 import colinajose.model.base.BaseEntity;
 import colinajose.model.people.Contact;
@@ -17,9 +15,6 @@ public class School extends BaseEntity {
     private MyCircularDoublyLinkedList<Kardex> kardexes;
     private MyCircularDoublyLinkedList<Teacher> teachers;
     private MyCircularDoublyLinkedList<Employee> staff;
-    private DataFileIO dataFileIO;
-    private SchoolObservable observable;
-
     private Contact contact;
     private String name;
 
@@ -32,8 +27,6 @@ public class School extends BaseEntity {
         this.kardexes = new MyCircularDoublyLinkedList<>();
         this.teachers = new MyCircularDoublyLinkedList<>();
         this.staff = new MyCircularDoublyLinkedList<>();
-        this.dataFileIO = new DataFileIO();
-        this.observable =  new SchoolObservable();
     }
 
     public Contact getContact() {
@@ -122,22 +115,6 @@ public class School extends BaseEntity {
 
     public void addParent(Parent parent){
         this.parents.add(parent);
-    }
-
-    public DataFileIO getDataFileIO() {
-        return dataFileIO;
-    }
-
-    public void setDataFileIO(DataFileIO dataFileIO) {
-        this.dataFileIO = dataFileIO;
-    }
-
-    public SchoolObservable getObservable() {
-        return observable;
-    }
-
-    public void setObservable(SchoolObservable observable) {
-        this.observable = observable;
     }
 
 }

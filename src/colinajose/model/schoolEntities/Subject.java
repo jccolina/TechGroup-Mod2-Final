@@ -1,6 +1,5 @@
 package colinajose.model.schoolEntities;
 
-import colinajose.model.people.Student;
 import datastructures.circulardoublylinkedlist.MyCircularDoublyLinkedList;
 import colinajose.model.base.BaseEntity;
 import colinajose.model.people.Teacher;
@@ -50,40 +49,12 @@ public class Subject extends BaseEntity {
         this.schedule = schedule;
     }
 
-    public void addSingleGrade(Grade grade){
+    public void addGrade(Grade grade){
         this.grades.add(grade);
     }
 
-    public void addSingleGrade(Student student, double grade){
-        Grade newGrade = new Grade(student, grade);
-        this.grades.add(newGrade);
-    }
-
-    public void addSingleSchedule(String schedule){
+    public void addSchedule(String schedule){
         this.schedule.add(schedule);
-    }
-
-    public double getGrade(Student student) {
-        double finalGrade = 0;
-        for (int i = 0; i < grades.size(); i++) {
-            Grade grade = grades.get(i);
-            if(grade.getStudent().equals(student)){
-                finalGrade = grade.getFinalGrade();
-                break;
-            }
-        }
-        return finalGrade;
-    }
-
-    @Override
-    public boolean equals(Object object){
-        if(object instanceof Subject){
-            Subject subjectToCompare = (Subject) object;
-            if(this.topic.equals(subjectToCompare.getTopic())){
-                return true;
-            }
-        }
-        return false;
     }
 
 }

@@ -7,6 +7,7 @@ public class Course extends BaseEntity {
     private String level;
     private String group;
     private String year;
+    private String classroom;
     private MyCircularDoublyLinkedList<Subject> subjects;
     private GradingScale gradingScale;
 
@@ -61,6 +62,14 @@ public class Course extends BaseEntity {
 
     public void setGroup(String group) {
         this.group = group;
+    }
+
+    public String getClassroom() {
+        return classroom;
+    }
+
+    public void setClassroom(String classroom) {
+        this.classroom = classroom;
     }
 
     @Override
