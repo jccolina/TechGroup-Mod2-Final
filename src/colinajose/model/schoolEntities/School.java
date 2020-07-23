@@ -45,7 +45,7 @@ public class School extends BaseEntity {
         this.name = name;
     }
 
-    public MyCircularDoublyLinkedList getStudents() {
+    public MyCircularDoublyLinkedList<Student> getStudents() {
         return students;
     }
 
@@ -57,7 +57,7 @@ public class School extends BaseEntity {
         this.students.add(student);
     }
 
-    public MyCircularDoublyLinkedList getCourses() {
+    public MyCircularDoublyLinkedList<Course> getCourses() {
         return courses;
     }
 
@@ -81,7 +81,7 @@ public class School extends BaseEntity {
         this.kardexes.add(kardex);
     }
 
-    public MyCircularDoublyLinkedList getTeachers() {
+    public MyCircularDoublyLinkedList<Teacher> getTeachers() {
         return teachers;
     }
 
