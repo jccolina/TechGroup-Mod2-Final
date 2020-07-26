@@ -13,14 +13,10 @@ import datastructures.circulardoublylinkedlist.MyCircularDoublyLinkedList;
 
 public class SchoolService {
     private School school;
-    private GradesService gradesService;
     private ObservableService observable;
-    private SearchService searcher;
 
     public SchoolService(){
-        this.gradesService = new GradesService();
         this.observable = new ObservableService();
-        this.searcher = new SearchService();
     }
 
     public void createSchool(String name, String address, String phone, String email){
@@ -68,7 +64,7 @@ public class SchoolService {
     public void sendNotifications(){}
     public void setGradingScale(String courseId, double scholarship, double expelled, double notify){
         Course course = SearchService.getCourse(this.school, courseId);
-        gradesService.setGradingScale(course, scholarship, expelled, notify);
+        GradesService.setGradingScale(course, scholarship, expelled, notify);
     }
     public MyCircularDoublyLinkedList<Student> getExpelledStudents(String kardexId){
         Kardex kardex = SearchService.getKardex(this.school, kardexId);
@@ -92,7 +88,7 @@ public class SchoolService {
     }
     public MyCircularDoublyLinkedList<Grade> getGrades(String kardexId){
         Kardex kardex = SearchService.getKardex(this.school, kardexId);
-        return gradesService.computeGrades(kardex);
+        return GradesService.computeGrades(kardex);
     }
     public Teacher getSubjectTeacher(String subjectId, String courseId){
         Course course = SearchService.getCourse(this.school, courseId);

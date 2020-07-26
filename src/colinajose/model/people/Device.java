@@ -1,8 +1,9 @@
 package colinajose.model.people;
 
+import colinajose.model.base.BaseEntity;
 import colinajose.model.people.Person;
 
-public class Device {
+public class Device extends BaseEntity {
     private Person owner;
     private String phoneNumber;
 

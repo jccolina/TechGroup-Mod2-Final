@@ -11,17 +11,17 @@ import datastructures.circulardoublylinkedlist.MyCircularDoublyLinkedList;
 
 public class GradesService {
 
-    public void setGradingScale(Course course, double scholarship, double expelled, double notify) {
+    public static void setGradingScale(Course course, double scholarship, double expelled, double notify) {
         GradingScale gradingScale = new GradingScale(expelled, notify, scholarship);
         course.setGradingScale(gradingScale);
     }
 
-    public void addGrade(double grade, Student student, Subject subject) {
+    public static void addGrade(double grade, Student student, Subject subject) {
         Grade studentGrade = new Grade(student, grade);
         subject.addGrade(studentGrade);
     }
 
-    public MyCircularDoublyLinkedList<Grade> computeGrades(Kardex kardex) {
+    public static MyCircularDoublyLinkedList<Grade> computeGrades(Kardex kardex) {
         MyCircularDoublyLinkedList<Student> students = kardex.getStudents();
         MyCircularDoublyLinkedList<Subject> subjects = kardex.getCourse().getSubjects();
         MyCircularDoublyLinkedList<Grade> averageGrades = new MyCircularDoublyLinkedList<>();
@@ -32,7 +32,7 @@ public class GradesService {
         return averageGrades;
     }
 
-    private Grade computeGrade(MyCircularDoublyLinkedList<Subject> subjects, Student student) {
+    private static Grade computeGrade(MyCircularDoublyLinkedList<Subject> subjects, Student student) {
         double average = 0;
         for (int i = 0; i < subjects.size(); i++) {
             MyCircularDoublyLinkedList<Grade> grades = subjects.get(i).getGrades();
@@ -48,7 +48,7 @@ public class GradesService {
         return new Grade(student, average);
     }
 
-    public void computeStudentStates(Kardex kardex, MyCircularDoublyLinkedList<Grade> averageGrades) {
+    public static void computeStudentStates(Kardex kardex, MyCircularDoublyLinkedList<Grade> averageGrades) {
         GradingScale gradingScale = kardex.getCourse().getGradingScale();
         double expelledGrade = gradingScale.getExpelledGrade();
         double notifyGrade = gradingScale.getNotifyGrade();
@@ -72,7 +72,7 @@ public class GradesService {
         }
     }
 
-    private void scholarshipToHigherGrades(MyCircularDoublyLinkedList<Grade> grades) {
+    private static void scholarshipToHigherGrades(MyCircularDoublyLinkedList<Grade> grades) {
         MyCircularDoublyLinkedList<Grade> sortedGrades = sortGrades(grades);
         double maxGrade = 0;
         for (int i = 0; i < sortedGrades.size(); i++) {
@@ -85,7 +85,7 @@ public class GradesService {
         }
     }
 
-    public MyCircularDoublyLinkedList<Grade> sortGrades(MyCircularDoublyLinkedList<Grade> grades) {
+    public static MyCircularDoublyLinkedList<Grade> sortGrades(MyCircularDoublyLinkedList<Grade> grades) {
         MyArrayList<Grade> sorted = new MyArrayList<>();
         sorted.add(grades.get(0));
         MyCircularDoublyLinkedList<Grade> result = new MyCircularDoublyLinkedList<>();
