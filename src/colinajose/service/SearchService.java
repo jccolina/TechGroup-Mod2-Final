@@ -38,11 +38,11 @@ public class SearchService {
         return getElement(course.getSubjects(), subjectId);
     }
 
-    private static <T> T getElement(MyCircularDoublyLinkedList<T> elements, String id){
+    private static <T extends BaseEntity> T getElement(MyCircularDoublyLinkedList<T> elements, String id){
         T foundElement = null;
         for (int i = 0; i < elements.size(); i++) {
             T element = elements.get(i);
-            if(((BaseEntity) element).getId().equals(id)){
+            if(element.getId().equals(id)){
                 foundElement = element;
             }
         }
@@ -60,15 +60,15 @@ public class SearchService {
         return result;
     }
 
-    public static Device getDevice(School school, Person person) {
-        Device foundDevice = null;
+    public static MyLinkedList<Device> getDevices(School school, Person person) {
+        MyLinkedList<Device> foundDevices = new MyLinkedList<>();
         MyCircularDoublyLinkedList<Device> devices = school.getDevices();
         for (int i = 0; i < devices.size(); i++) {
             Device device = devices.get(i);
             if(device.getOwner().equals(person)){
-                foundDevice = device;
+                foundDevices.add(device);
             }
         }
-        return foundDevice;
+        return foundDevices;
     }
 }

@@ -7,9 +7,9 @@ public class Device extends BaseEntity {
     private Person owner;
     private String phoneNumber;
 
-    public Device(Person owner) {
+    public Device(Person owner, String phoneNumber) {
         this.owner = owner;
-        this.phoneNumber = owner.getContact().getPhone();
+        this.phoneNumber = phoneNumber;
     }
 
     public String getPhoneNumber() {

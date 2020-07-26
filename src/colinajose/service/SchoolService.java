@@ -49,9 +49,7 @@ public class SchoolService {
     public String registerParent(String name, String ci, int age, String gender, String address, String phone, String email){
         Contact contact = new Contact(address, phone, email);
         Parent parent = new Parent(name, ci, age, gender, contact);
-        Device device =  new Device(parent);
         this.school.addParent(parent);
-        this.school.addDevice(device);
         return parent.getId();
     }
     public String registerSubject(String topic, String courseId, String teacherId){
@@ -68,6 +66,12 @@ public class SchoolService {
         school.addTeacher(teacher);
         return teacher.getId();
     }
+    public String registerDevice(String personId, String phoneNumber){
+        Person person = SearchService.getParent(this.school, personId);
+        Device device = new Device(person, phoneNumber);
+        this.school.addDevice(device);
+        return device.getId();
+    }
     public void setGradingScale(String courseId, double scholarship, double expelled, double notify){
         Course course = SearchService.getCourse(this.school, courseId);
         GradesService.setGradingScale(course, scholarship, expelled, notify);
@@ -78,45 +82,44 @@ public class SchoolService {
         GradesService.computeStudentStates(kardex, grades);
     }
     public void updateNotifyList(String kardexId){
-        MyCircularDoublyLinkedList<Device> devicesToNotify = getDevicesToNotify(kardexId);
+        MyLinkedList<Device> devicesToNotify = getDevicesToNotify(kardexId);
         registerObservers(devicesToNotify);
-        MyCircularDoublyLinkedList<Device> devicesToDetach = getDevicesToDetach(kardexId);
+        MyLinkedList<Device> devicesToDetach = getDevicesToDetach(kardexId);
         removeObservers(devicesToDetach);
     }
     public void sendNotifications(){
         this.observable.notifyObservers();
     }
-    private MyCircularDoublyLinkedList<Device> getDevicesToDetach(String kardexId){
+    private MyLinkedList<Device> getDevicesToDetach(String kardexId){
         MyLinkedList<Student> students = new MyLinkedList<>();
         students.addAll(getAverageStudents(kardexId));
         students.addAll(getScholarshipStudents(kardexId));
         students.addAll(getExpelledStudents(kardexId));
         return getDevices(students);
     }
-    private MyCircularDoublyLinkedList<Device> getDevicesToNotify(String kardexId) {
+    private MyLinkedList<Device> getDevicesToNotify(String kardexId) {
         MyLinkedList<Student> students = new MyLinkedList<>();
         students.addAll(getNotifyStudents(kardexId));
         return getDevices(students);
     }
-    private MyCircularDoublyLinkedList<Device> getDevices(MyLinkedList<Student> students){
-        MyCircularDoublyLinkedList<Device> devices = new MyCircularDoublyLinkedList<>();
+    private MyLinkedList<Device> getDevices(MyLinkedList<Student> students){
+        MyLinkedList<Device> devices = new MyLinkedList<>();
         for (int i = 0; i < students.size(); i++) {
             Student student = students.get(i);
             MyCircularDoublyLinkedList<Person> parents = student.getParents();
             for (int j = 0; j < parents.size(); j++) {
-                Device device = SearchService.getDevice(this.school, parents.get(i));
-                devices.add(device);
+                devices.addAll(SearchService.getDevices(this.school, parents.get(i)));
             }
         }
         return devices;
     }
-    private void removeObservers(MyCircularDoublyLinkedList<Device> devices){
+    private void removeObservers(MyLinkedList<Device> devices){
         for (int i = 0; i < devices.size(); i++) {
             Device device = devices.get(i);
             this.observable.removeObserver(new DeviceService(device));
         }
     }
-    private void registerObservers(MyCircularDoublyLinkedList<Device> devices){
+    private void registerObservers(MyLinkedList<Device> devices){
         for (int i = 0; i < devices.size(); i++) {
             Device device = devices.get(i);
             this.observable.registerObserver(new DeviceService(device));
