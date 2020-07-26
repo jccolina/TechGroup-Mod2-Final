@@ -1,5 +1,6 @@
 package colinajose.model.schoolEntities;
 
+import colinajose.model.people.Device;
 import datastructures.circulardoublylinkedlist.MyCircularDoublyLinkedList;
 import colinajose.model.base.BaseEntity;
 import colinajose.model.people.Contact;
@@ -15,6 +16,7 @@ public class School extends BaseEntity {
     private MyCircularDoublyLinkedList<Kardex> kardexes;
     private MyCircularDoublyLinkedList<Teacher> teachers;
     private MyCircularDoublyLinkedList<Employee> staff;
+    private MyCircularDoublyLinkedList<Device> devices;
     private Contact contact;
     private String name;
 
@@ -27,6 +29,7 @@ public class School extends BaseEntity {
         this.kardexes = new MyCircularDoublyLinkedList<>();
         this.teachers = new MyCircularDoublyLinkedList<>();
         this.staff = new MyCircularDoublyLinkedList<>();
+        this.devices = new MyCircularDoublyLinkedList<>();
     }
 
     public Contact getContact() {
@@ -53,7 +56,7 @@ public class School extends BaseEntity {
         this.students = students;
     }
 
-    public void addStudent(Student student){
+    public void addStudent(Student student) {
         this.students.add(student);
     }
 
@@ -65,7 +68,7 @@ public class School extends BaseEntity {
         this.courses = courses;
     }
 
-    public void addCourse(Course course){
+    public void addCourse(Course course) {
         this.courses.add(course);
     }
 
@@ -77,7 +80,7 @@ public class School extends BaseEntity {
         this.kardexes = kardexes;
     }
 
-    public void addKardex(Kardex kardex){
+    public void addKardex(Kardex kardex) {
         this.kardexes.add(kardex);
     }
 
@@ -89,7 +92,7 @@ public class School extends BaseEntity {
         this.teachers = teachers;
     }
 
-    public void addTeacher(Teacher teacher){
+    public void addTeacher(Teacher teacher) {
         this.teachers.add(teacher);
     }
 
@@ -101,7 +104,7 @@ public class School extends BaseEntity {
         this.staff = staff;
     }
 
-    public void addStaff(Employee employee){
+    public void addStaff(Employee employee) {
         this.staff.add(employee);
     }
 
@@ -113,8 +116,20 @@ public class School extends BaseEntity {
         this.parents = parents;
     }
 
-    public void addParent(Parent parent){
+    public void addParent(Parent parent) {
         this.parents.add(parent);
+    }
+
+    public MyCircularDoublyLinkedList<Device> getDevices() {
+        return devices;
+    }
+
+    public void setDevices(MyCircularDoublyLinkedList<Device> devices) {
+        this.devices = devices;
+    }
+
+    public void addDevice(Device device) {
+        this.devices.add(device);
     }
 
 }
