@@ -71,4 +71,14 @@ public class SearchService {
         }
         return foundDevices;
     }
+
+    public static Student getStudentsbyName(MyCircularDoublyLinkedList<Student> students, String studentName) {
+        for (int i = 0; i < students.size(); i++) {
+            Student student = students.get(i);
+            if (student.getName().equals(studentName)) {
+                return student;
+            }
+        }
+        return null;
+    }
 }

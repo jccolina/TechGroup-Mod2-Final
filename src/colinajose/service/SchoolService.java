@@ -1,5 +1,6 @@
 package colinajose.service;
 
+import colinajose.data.DataIO;
 import colinajose.model.people.Contact;
 import colinajose.model.people.Device;
 import colinajose.model.people.Parent;
@@ -11,15 +12,19 @@ import colinajose.model.schoolEntities.Grade;
 import colinajose.model.schoolEntities.Kardex;
 import colinajose.model.schoolEntities.School;
 import colinajose.model.schoolEntities.Subject;
+import datastructures.arraylist.MyArrayList;
 import datastructures.circulardoublylinkedlist.MyCircularDoublyLinkedList;
+import datastructures.hashmap.MyHashMap;
 import datastructures.linkedlist.MyLinkedList;
 
 public class SchoolService {
     private School school;
     private ObservableService observable;
+    private DataIO dataHandler;
 
     public SchoolService(){
         this.observable = new ObservableService();
+        this.dataHandler = new DataIO();
     }
 
     public void createSchool(String name, String address, String phone, String email){
@@ -140,6 +145,43 @@ public class SchoolService {
     public MyLinkedList<Student> getNotifyStudents(String kardexId){
         Kardex kardex = SearchService.getKardex(this.school, kardexId);
         return SearchService.getStudentsbyState(kardex.getStudents(), Student.State.EXPELLED);
+    }
+    public boolean importGrades(String kardexId, String subjectId, String pathFile, String nameField, String gradeField){
+        Kardex kardex = SearchService.getKardex(this.school, kardexId);
+        Subject subject = SearchService.getSubject(kardex.getCourse(), subjectId);
+        MyArrayList<MyHashMap<String, String>> entries = this.dataHandler.read(pathFile);
+        if(entries.isEmpty()){
+            return false;
+        }
+        boolean isImportSucess = true;
+        for (int i = 0; i < entries.size(); i++) {
+            MyHashMap<String, String> entry = entries.get(i);
+            String studentName = entry.get(nameField);
+            Student student = SearchService.getStudentsbyName(kardex.getStudents(), studentName);
+            if(student == null){
+                isImportSucess = false;
+            }
+            double grade = Double.parseDouble(entry.get(gradeField));
+            GradesService.addGrade(grade, student, subject);
+        }
+        return isImportSucess;
+    }
+    public boolean exportGrades(String kardexId, String pathFile, String studentField, String gradeField){
+        Kardex kardex = SearchService.getKardex(this.school, kardexId);
+        MyCircularDoublyLinkedList<Grade> grades = GradesService.computeGrades(kardex);
+        MyCircularDoublyLinkedList<Grade> sortedGrades = GradesService.sortGrades(grades);
+        MyArrayList<MyHashMap<String, String>> entriesToWrite = gradesToEntries(sortedGrades, studentField, gradeField);
+        return dataHandler.write(pathFile, entriesToWrite);
+    }
+    private MyArrayList<MyHashMap<String, String>> gradesToEntries(MyCircularDoublyLinkedList<Grade> grades, String studentField, String gradeField){
+        MyArrayList<MyHashMap<String, String>> entries = new MyArrayList<>();
+        for (int i = 0; i < grades.size(); i++) {
+            MyHashMap<String, String> entry = new MyHashMap<>();
+            entry.put(studentField, grades.get(i).getStudent().getName());
+            entry.put(gradeField, String.valueOf(grades.get(i).getFinalGrade()));
+            entries.add(entry);
+        }
+        return entries;
     }
     public MyCircularDoublyLinkedList<Student> getStudents(String kardexId){
         Kardex kardex = SearchService.getKardex(this.school, kardexId);
