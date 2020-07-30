@@ -44,15 +44,17 @@ public class ReadWriteJSON extends ReadWriteFile {
         try {
             BufferedWriter writer = Files.newBufferedWriter(Paths.get(this.path));
             JSONArray objectsArray = new JSONArray();
-            JSONObject object = new JSONObject();
-            for (int i = 0; i < entries.size(); i++) {
-                MyHashMap<String, String> entry = entries.get(i);
-                MyArrayList<String> keys = getMapKeys(entries.get(i));
-                for (int j = 0; j < keys.size(); j++) {
-                    String key = keys.get(i);
-                    object.put(key, entry.get(key));
+            if(!entries.isEmpty()) {
+                for (int i = 0; i < entries.size(); i++) {
+                    JSONObject object = new JSONObject();
+                    MyHashMap<String, String> entry = entries.get(i);
+                    MyArrayList<String> keys = getMapKeys(entries.get(i));
+                    for (int j = 0; j < keys.size(); j++) {
+                        String key = keys.get(j);
+                        object.put(key, entry.get(key));
+                    }
+                    objectsArray.put(object);
                 }
-                objectsArray.put(object);
             }
             objectsArray.write(writer);
             writer.close();

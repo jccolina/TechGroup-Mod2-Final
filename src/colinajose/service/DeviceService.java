@@ -18,4 +18,23 @@ public class DeviceService implements Observer{
                 "Therefore we would like to get together in order to discuss about it." + "\n" +
                 "Best Regards");
     }
+
+    @Override
+    public boolean equals(Object object){
+        if(object instanceof DeviceService){
+            DeviceService deviceService = (DeviceService) object;
+            if (this.device.equals(deviceService.getDevice())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Device getDevice() {
+        return device;
+    }
+
+    public void setDevice(Device device) {
+        this.device = device;
+    }
 }

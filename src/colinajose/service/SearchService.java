@@ -40,10 +40,12 @@ public class SearchService {
 
     private static <T extends BaseEntity> T getElement(MyCircularDoublyLinkedList<T> elements, String id){
         T foundElement = null;
-        for (int i = 0; i < elements.size(); i++) {
-            T element = elements.get(i);
-            if(element.getId().equals(id)){
-                foundElement = element;
+        if(elements.size() != 0) {
+            for (int i = 0; i < elements.size(); i++) {
+                T element = elements.get(i);
+                if (element.getId().equals(id)) {
+                    foundElement = element;
+                }
             }
         }
         return foundElement;
@@ -51,10 +53,12 @@ public class SearchService {
 
     public static MyLinkedList<Student> getStudentsbyState(MyCircularDoublyLinkedList<Student> students, Student.State state) {
         MyLinkedList<Student> result = new MyLinkedList<>();
-        for (int i = 0; i < students.size(); i++) {
-            Student student = students.get(i);
-            if(student.getState().equals(state)){
-                result.add(student);
+        if(students.size() > 0) {
+            for (int i = 0; i < students.size(); i++) {
+                Student student = students.get(i);
+                if (student.getState().equals(state)) {
+                    result.add(student);
+                }
             }
         }
         return result;
@@ -63,20 +67,24 @@ public class SearchService {
     public static MyLinkedList<Device> getDevices(School school, Person person) {
         MyLinkedList<Device> foundDevices = new MyLinkedList<>();
         MyCircularDoublyLinkedList<Device> devices = school.getDevices();
-        for (int i = 0; i < devices.size(); i++) {
-            Device device = devices.get(i);
-            if(device.getOwner().equals(person)){
-                foundDevices.add(device);
+        if(devices.size() != 0) {
+            for (int i = 0; i < devices.size(); i++) {
+                Device device = devices.get(i);
+                if (device.getOwner().equals(person)) {
+                    foundDevices.add(device);
+                }
             }
         }
         return foundDevices;
     }
 
     public static Student getStudentsbyName(MyCircularDoublyLinkedList<Student> students, String studentName) {
-        for (int i = 0; i < students.size(); i++) {
-            Student student = students.get(i);
-            if (student.getName().equals(studentName)) {
-                return student;
+        if(students.size() != 0) {
+            for (int i = 0; i < students.size(); i++) {
+                Student student = students.get(i);
+                if (student.getName().equals(studentName)) {
+                    return student;
+                }
             }
         }
         return null;

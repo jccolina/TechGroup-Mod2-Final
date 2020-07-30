@@ -3,14 +3,14 @@ package colinajose.model.people;
 import datastructures.circulardoublylinkedlist.MyCircularDoublyLinkedList;
 
 public class Student extends Person {
-    public enum State {SCHOLARSHIP, EXPELLED, NOTIFY, AVERAGE};
+    public enum State {SCHOLARSHIP, EXPELLED, NOTIFY, AVERAGE, NONE};
     private State state;
-    private float gradeAverage;
     private MyCircularDoublyLinkedList<Parent> parents;
 
     public Student(String name, String CI, int age, String gender, Contact contact) {
         super(name, CI, age, gender, contact);
         this.parents = new MyCircularDoublyLinkedList<>();
+        this.state = State.NONE;
     }
 
     public Student(String name, String CI, int age, String gender) {
@@ -18,20 +18,12 @@ public class Student extends Person {
         this.parents = new MyCircularDoublyLinkedList<>();
     }
 
-    public String getState() {
-        return state.toString();
+    public State getState() {
+        return state;
     }
 
     public void setState(State state) {
         this.state = state;
-    }
-
-    public float getGradeAverage() {
-        return gradeAverage;
-    }
-
-    public void setGradeAverage(float gradeAverage) {
-        this.gradeAverage = gradeAverage;
     }
 
     public void addParent(Parent parent){

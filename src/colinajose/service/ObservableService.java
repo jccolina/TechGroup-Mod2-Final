@@ -6,13 +6,15 @@ public class ObservableService implements Observable {
 
     private MyCircularDoublyLinkedList<Observer> serviceDevices;
 
-    public ObservableService(){
+    public ObservableService() {
         this.serviceDevices = new MyCircularDoublyLinkedList<>();
     }
 
     @Override
     public void registerObserver(Observer observer) {
-        this.serviceDevices.add(observer);
+        if (!this.serviceDevices.contains(observer)) {
+            this.serviceDevices.add(observer);
+        }
     }
 
     @Override
@@ -22,8 +24,12 @@ public class ObservableService implements Observable {
 
     @Override
     public void notifyObservers() {
-        for (int i = 0; i < this.serviceDevices.size(); i++) {
-            this.serviceDevices.get(i).sendNotification();
+        if (this.serviceDevices.size() != 0) {
+            for (int i = 0; i < this.serviceDevices.size(); i++) {
+                this.serviceDevices.get(i).sendNotification();
+            }
+        } else {
+            System.out.println("No devices to be notified.");
         }
     }
 }

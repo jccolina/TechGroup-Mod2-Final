@@ -27,4 +27,15 @@ public class Device extends BaseEntity {
     public void setOwner(Person owner) {
         this.owner = owner;
     }
+
+    @Override
+    public boolean equals(Object object){
+        if(object instanceof Device){
+            Device device = (Device) object;
+            if (this.phoneNumber.equals(device.getPhoneNumber()) && this.owner.equals(device.getOwner())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

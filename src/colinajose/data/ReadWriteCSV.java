@@ -46,19 +46,23 @@ public class ReadWriteCSV extends ReadWriteFile {
                     CSVWriter.DEFAULT_QUOTE_CHARACTER,
                     CSVWriter.DEFAULT_ESCAPE_CHARACTER,
                     CSVWriter.DEFAULT_LINE_END);
-            MyArrayList<String> keys = getMapKeys(entries.get(0));
-            String[] headers = getHeaders(keys);
-            //Write headers in CSV
-            writer.writeNext(headers);
-            for (int i = 0; i < entries.size(); i++) {
-                MyHashMap<String, String> entry = entries.get(i);
-                String[] line = new String[headers.length];
-                for (int j = 0; j < headers.length; j++) {
-                    line[i] = entry.get(headers[i]);
+            if(!entries.isEmpty()) {
+                MyArrayList<String> keys = getMapKeys(entries.get(0));
+                String[] headers = getHeaders(keys);
+                //Write headers in CSV
+                writer.writeNext(headers);
+                for (int i = 0; i < entries.size(); i++) {
+                    MyHashMap<String, String> entry = entries.get(i);
+                    String[] line = new String[headers.length];
+                    for (int j = 0; j < headers.length; j++) {
+                        line[j] = entry.get(headers[j]);
+                    }
+                    writer.writeNext(line);
                 }
-                writer.writeNext(line);
+                writer.close();
+            } else {
+                writer.writeNext(new String[]{""});
             }
-            writer.close();
             return true;
         } catch (Exception exception) {
             System.out.println(exception);

@@ -43,4 +43,9 @@ public class Kardex extends BaseEntity {
         }
         return false;
     }
+
+    @Override
+    public String toString(){
+        return getCourse().toString();
+    }
 }

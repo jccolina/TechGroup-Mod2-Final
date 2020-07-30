@@ -57,4 +57,9 @@ public class Subject extends BaseEntity {
         this.schedule.add(schedule);
     }
 
+    @Override
+    public String toString(){
+        return getTopic();
+    }
+
 }

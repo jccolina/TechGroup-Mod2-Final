@@ -87,4 +87,9 @@ public abstract class Person extends BaseEntity {
         this.gender = gender;
     }
 
+    @Override
+    public String toString(){
+        return getName() + ", " + "CI: " + getCi();
+    }
+
 }

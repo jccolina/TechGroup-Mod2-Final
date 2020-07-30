@@ -12,10 +12,18 @@ public class DataIO {
 
     public MyArrayList<MyHashMap<String, String>> read(String path){
         ReadWriteFile file = factory.createFile(path);
-        return file.readEntries();
+        if(file == null){
+            return null;
+        } else {
+            return file.readEntries();
+        }
     }
     public boolean write(String path, MyArrayList<MyHashMap<String, String>> entries){
         ReadWriteFile file = factory.createFile(path);
-        return file.writeEntries(entries);
+        if(file == null){
+            return false;
+        } else {
+            return file.writeEntries(entries);
+        }
     }
 }

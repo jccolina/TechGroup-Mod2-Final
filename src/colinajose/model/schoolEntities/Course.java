@@ -84,4 +84,9 @@ public class Course extends BaseEntity {
         }
         return false;
     }
+
+    @Override
+    public String toString(){
+        return "Grade: " + getLevel() + ", Group: " + getGroup() + ", Year: " + getYear();
+    }
 }

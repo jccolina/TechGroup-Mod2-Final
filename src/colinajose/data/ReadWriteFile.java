@@ -13,14 +13,15 @@ public abstract class ReadWriteFile {
     }
     public abstract MyArrayList<MyHashMap<String, String>> readEntries();
     public abstract boolean writeEntries(MyArrayList<MyHashMap<String, String>> entries);
-    protected MyArrayList<String> getMapKeys(MyHashMap map){
+    protected MyArrayList<String> getMapKeys(MyHashMap<String, String> map){
         MyArrayList<String> keys = new MyArrayList<>();
-        int size = map.getIndexSize();
-        for (int i = 0; i < size; i++) {
-            MyCircularDoublyLinkedList<MyEntry> entriesList = map.get(i);
-            for (int j = 0; j < entriesList.size(); j++) {
-                MyEntry entry = entriesList.get(i);
-                keys.add((String)entry.getKey());
+        if(map.size() != 0) {
+            for (int i = 0; i < map.getIndexSize(); i++) {
+                MyCircularDoublyLinkedList<MyEntry<String, String>> entriesList = map.get(i);
+                for (int j = 0; j < entriesList.size(); j++) {
+                    MyEntry entry = entriesList.get(j);
+                    keys.add((String) entry.getKey());
+                }
             }
         }
         return keys;
