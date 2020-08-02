@@ -1,5 +1,6 @@
 package datastructures.hashmap;
 
+import datastructures.arraylist.MyArrayList;
 import datastructures.circulardoublylinkedlist.MyCircularDoublyLinkedList;
 import org.junit.Test;
 
@@ -152,6 +153,30 @@ public class MyHashMapTest {
         assertTrue(myHashMap.containsValue("6"));
         assertTrue(myHashMap.containsValue("12"));
         assertFalse(myHashMap.containsValue("29"));
+    }
+    @Test
+    public void testGetKeys() {
+        MyHashMap<Integer, String> myHashMap = new MyHashMap<>();
+
+        myHashMap.put(6, "6");
+        myHashMap.put(12, "12");
+        MyArrayList<Integer> actual = myHashMap.getKeys();
+
+        assertTrue(actual.contains(6));
+        assertTrue(actual.contains(12));
+        assertEquals(actual.size(), 2);
+    }
+    @Test
+    public void testGetValues() {
+        MyHashMap<Integer, String> myHashMap = new MyHashMap<>();
+
+        myHashMap.put(6, "6");
+        myHashMap.put(12, "12");
+        MyArrayList<String> actual = myHashMap.getValues();
+
+        assertTrue(actual.contains("6"));
+        assertTrue(actual.contains("12"));
+        assertEquals(actual.size(), 2);
     }
 
 }

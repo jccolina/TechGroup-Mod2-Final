@@ -16,6 +16,7 @@ public class ReadWriteCSV extends ReadWriteFile {
     public ReadWriteCSV(String path){
         super(path);
     }
+
     @Override
     public MyArrayList<MyHashMap<String, String>> readEntries() {
         MyArrayList<MyHashMap<String, String>> entries = new MyArrayList<>();
@@ -47,7 +48,7 @@ public class ReadWriteCSV extends ReadWriteFile {
                     CSVWriter.DEFAULT_ESCAPE_CHARACTER,
                     CSVWriter.DEFAULT_LINE_END);
             if(!entries.isEmpty()) {
-                MyArrayList<String> keys = getMapKeys(entries.get(0));
+                MyArrayList<String> keys = entries.get(0).getKeys();
                 String[] headers = getHeaders(keys);
                 //Write headers in CSV
                 writer.writeNext(headers);
@@ -59,10 +60,10 @@ public class ReadWriteCSV extends ReadWriteFile {
                     }
                     writer.writeNext(line);
                 }
-                writer.close();
             } else {
                 writer.writeNext(new String[]{""});
             }
+            writer.close();
             return true;
         } catch (Exception exception) {
             System.out.println(exception);

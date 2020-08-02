@@ -232,20 +232,21 @@ public class ActionPicker {
         this.messagesHandler.successMessage();
     }
 
-    private String selectItem(MyArrayList<MyHashMap<String, String>> itemList, String type){
+    private <T> String selectItem(MyHashMap<String, T> items, String type){
         boolean isWrongInput = true;
         int item = 0;
-        if(!itemList.isEmpty()) {
+        if(items.size() > 0) {
+            MyArrayList<String> keys = items.getKeys();
             while (isWrongInput) {
-                this.messagesHandler.showItems(itemList, type);
+                this.messagesHandler.showItems(items, keys, type);
                 item = this.inputHandler.getIntegerInput() - 1;
-                if (item >= 0 && item < itemList.size()) {
+                if (item >= 0 && item < items.size()) {
                     isWrongInput = false;
                     continue;
                 }
                 this.messagesHandler.showWrongOption();
             }
-            return itemList.get(item).get("id");
+            return keys.get(item);
         } else {
             this.messagesHandler.showEmptyList(type);
             return "";

@@ -249,39 +249,36 @@ public class SchoolService {
         return SearchService.getStudent(this.school, studentId);
     }
 
-    private <T extends BaseEntity> MyArrayList<MyHashMap<String, String>> elementsToEntries(MyCircularDoublyLinkedList<T> elements) {
-        MyArrayList<MyHashMap<String, String>> result = new MyArrayList<>();
-        if (elements.size() != 0) {
+    private <T extends BaseEntity> MyHashMap<String, T> elementsToMap(MyCircularDoublyLinkedList<T> elements) {
+        MyHashMap<String, T> mapResult = new MyHashMap<>();
+        if (elements.size() > 0) {
             for (int i = 0; i < elements.size(); i++) {
                 T element = elements.get(i);
-                MyHashMap<String, String> entry = new MyHashMap<>();
-                entry.put("id", element.getId());
-                entry.put("item", element.toString());
-                result.add(entry);
+                mapResult.put(element.getId(), element);
             }
         }
-        return result;
+        return mapResult;
     }
 
-    public MyArrayList<MyHashMap<String, String>> getTeachers() {
-        return elementsToEntries(this.school.getTeachers());
+    public MyHashMap<String, Teacher> getTeachers() {
+        return elementsToMap(this.school.getTeachers());
     }
 
-    public MyArrayList<MyHashMap<String, String>> getParents() {
-        return elementsToEntries(this.school.getParents());
+    public MyHashMap<String, Parent> getParents() {
+        return elementsToMap(this.school.getParents());
     }
 
-    public MyArrayList<MyHashMap<String, String>> getKardexes() {
-        return elementsToEntries(this.school.getKardexes());
+    public MyHashMap<String, Kardex> getKardexes() {
+        return elementsToMap(this.school.getKardexes());
     }
 
-    public MyArrayList<MyHashMap<String, String>> getCourses() {
-        return elementsToEntries(this.school.getCourses());
+    public MyHashMap<String, Course> getCourses() {
+        return elementsToMap(this.school.getCourses());
     }
 
-    public MyArrayList<MyHashMap<String, String>> getSubjects(String kardexId) {
+    public MyHashMap<String, Subject> getSubjects(String kardexId) {
         Kardex kardex = SearchService.getKardex(this.school, kardexId);
         Course course = kardex.getCourse();
-        return elementsToEntries(course.getSubjects());
+        return elementsToMap(course.getSubjects());
     }
 }

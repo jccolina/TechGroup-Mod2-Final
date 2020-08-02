@@ -29,31 +29,6 @@ public class MessagesHandler {
     public void failureMessage(){
         System.out.println("Sorry the action could not be completed.");
     }
-    public void showSubmenu(String submenu){
-        switch (submenu){
-            case "SchoolInfo":
-                schoolInfo();
-                break;
-            case "SchoolAddress":
-                break;
-            case "StudentName":
-                break;
-            default:
-                break;
-        }
-
-    }
-
-    private void schoolInfo() {
-    }
-
-    public void showItems(MyArrayList<MyHashMap<String, String>> items, String itemType) {
-        System.out.println("Select " + itemType + ":");
-        for (int i = 0; i < items.size(); i++) {
-            MyHashMap<String, String> item = items.get(i);
-            System.out.println((i + 1) + ". " + item.get("item"));
-        }
-    }
 
     public void showWrongOption() {
         System.out.println("Wrong option, please try again.");
@@ -65,5 +40,13 @@ public class MessagesHandler {
 
     public void showEmptyList(String type) {
         System.out.println("Not possible to continue because of lack of " + type);
+    }
+
+    public <T> void showItems(MyHashMap<String, T> items, MyArrayList<String> keys, String type) {
+        System.out.println("Select " + type + ":");
+        for (int i = 0; i < keys.size(); i++) {
+            T item = items.get(keys.get(i));
+            System.out.println((i + 1) + ". " + item.toString());
+        }
     }
 }

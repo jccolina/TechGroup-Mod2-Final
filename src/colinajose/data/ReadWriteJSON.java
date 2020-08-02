@@ -48,7 +48,7 @@ public class ReadWriteJSON extends ReadWriteFile {
                 for (int i = 0; i < entries.size(); i++) {
                     JSONObject object = new JSONObject();
                     MyHashMap<String, String> entry = entries.get(i);
-                    MyArrayList<String> keys = getMapKeys(entries.get(i));
+                    MyArrayList<String> keys = entry.getKeys();
                     for (int j = 0; j < keys.size(); j++) {
                         String key = keys.get(j);
                         object.put(key, entry.get(key));
