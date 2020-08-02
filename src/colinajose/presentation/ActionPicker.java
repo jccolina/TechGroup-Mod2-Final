@@ -12,7 +12,7 @@ public class ActionPicker {
     public ActionPicker(){
         this.messagesHandler =  new MessagesHandler();
         this.inputHandler = new InputHandler();
-        this.schoolService = new SchoolService();
+        this.schoolService = SchoolService.getSchoolService();
     }
 
     public void runAction(String action){
@@ -228,7 +228,7 @@ public class ActionPicker {
         String phone = this.inputHandler.getTextInput();
         this.messagesHandler.showInputRequest("email");
         String email = this.inputHandler.getTextInput();
-        this.schoolService.createSchool(name, address, phone, email);
+        this.schoolService.editSchool(name, address, phone, email);
         this.messagesHandler.successMessage();
     }
 

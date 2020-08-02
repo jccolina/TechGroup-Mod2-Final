@@ -20,9 +20,7 @@ public class School extends BaseEntity {
     private Contact contact;
     private String name;
 
-    public School(String name, Contact contact) {
-        this.name = name;
-        this.contact = contact;
+    public School(){
         this.students = new MyCircularDoublyLinkedList<>();
         this.parents = new MyCircularDoublyLinkedList<>();
         this.courses = new MyCircularDoublyLinkedList<>();

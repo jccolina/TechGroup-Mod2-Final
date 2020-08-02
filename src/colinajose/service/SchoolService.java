@@ -19,45 +19,58 @@ import datastructures.hashmap.MyHashMap;
 import datastructures.linkedlist.MyLinkedList;
 
 public class SchoolService {
+    private static SchoolService schoolService;
     private School school;
     private ObservableService observable;
     private DataIO dataHandler;
 
-    public SchoolService() {
+    private SchoolService() {
         this.observable = new ObservableService();
         this.dataHandler = new DataIO();
+        this.school = new School();
     }
 
-    public void createSchool(String name, String address, String phone, String email) {
+    public static SchoolService getSchoolService(){
+        if(schoolService == null){
+            schoolService = new SchoolService();
+        }
+        return schoolService;
+    }
+
+    public void editSchool(String name, String address, String phone, String email) {
         Contact contact = new Contact(address, phone, email);
-        this.school = new School(name, contact);
+        this.school.setName(name);
+        this.school.setContact(contact);
     }
 
     public String enrollStudent(String name, String ci, int age, String gender, String kardexId, String address, String phone, String email) {
         Contact contact = new Contact(address, phone, email);
         Student student = new Student(name, ci, age, gender, contact);
-        Kardex kardex = SearchService.getKardex(this.school, kardexId);
+        Kardex kardex = (Kardex) SearchService.getIndexedElement(kardexId);
         kardex.addStudent(student);
         this.school.addStudent(student);
+        SearchService.indexElement(student.getId(), student);
         return student.getId();
     }
 
     public void assignParent(String parentId, String studentId) {
-        Parent parent = SearchService.getParent(this.school, parentId);
-        Student student = SearchService.getStudent(this.school, studentId);
+        Parent parent = (Parent) SearchService.getIndexedElement(parentId);
+        Student student = (Student) SearchService.getIndexedElement(studentId);
         student.addParent(parent);
     }
 
     public String registerKardex(String courseId) {
-        Course course = SearchService.getCourse(this.school, courseId);
+        Course course = (Course) SearchService.getIndexedElement(courseId);
         Kardex kardex = new Kardex(course);
         this.school.addKardex(kardex);
+        SearchService.indexElement(kardex.getId(), kardex);
         return kardex.getId();
     }
 
     public String registerCourse(String grade, String year, String group) {
         Course course = new Course(grade, year, group);
         this.school.addCourse(course);
+        SearchService.indexElement(course.getId(), course);
         return course.getId();
     }
 
@@ -65,40 +78,44 @@ public class SchoolService {
         Contact contact = new Contact(address, phone, email);
         Parent parent = new Parent(name, ci, age, gender, contact);
         this.school.addParent(parent);
+        SearchService.indexElement(parent.getId(), parent);
         return parent.getId();
     }
 
     public String registerSubject(String topic, String courseId, String teacherId) {
         Subject subject = new Subject(topic);
-        Course course = SearchService.getCourse(school, courseId);
+        Course course = (Course) SearchService.getIndexedElement(courseId);
         Teacher teacher = getTeacher(teacherId);
         subject.setTeacher(teacher);
         course.addSubject(subject);
+        SearchService.indexElement(subject.getId(), subject);
         return subject.getId();
     }
 
     public String registerTeacher(String name, String ci, int age, String gender, String address, String phone, String email) {
         Contact contact = new Contact(address, phone, email);
         Teacher teacher = new Teacher(name, ci, age, gender, contact);
-        school.addTeacher(teacher);
+        this.school.addTeacher(teacher);
+        SearchService.indexElement(teacher.getId(), teacher);
         return teacher.getId();
     }
 
     public String registerDevice(String personId, String phoneNumber) {
-        Person person = SearchService.getParent(this.school, personId);
+        Person person = (Parent) SearchService.getIndexedElement(personId);
         Device device = new Device(person, phoneNumber);
         this.school.addDevice(device);
+        SearchService.indexElement(device.getId(), device);
         return device.getId();
     }
 
     public void setGradingScale(String kardexId, double scholarship, double expelled, double notify) {
-        Kardex kardex = SearchService.getKardex(this.school, kardexId);
+        Kardex kardex = (Kardex) SearchService.getIndexedElement(kardexId);
         Course course = kardex.getCourse();
         GradesService.setGradingScale(course, scholarship, expelled, notify);
     }
 
     public void computeGrades(String kardexId) {
-        Kardex kardex = SearchService.getKardex(this.school, kardexId);
+        Kardex kardex = (Kardex) SearchService.getIndexedElement(kardexId);
         MyCircularDoublyLinkedList<Grade> grades = GradesService.computeGrades(kardex);
         GradesService.computeStudentStates(kardex, grades);
     }
@@ -136,7 +153,7 @@ public class SchoolService {
                 MyCircularDoublyLinkedList<Person> parents = student.getParents();
                 if (parents.size() != 0) {
                     for (int j = 0; j < parents.size(); j++) {
-                        devices.addAll(SearchService.getDevices(this.school, parents.get(j)));
+                        devices.addAll(SearchService.getDevices(parents.get(j)));
                     }
                 }
             }
@@ -163,28 +180,28 @@ public class SchoolService {
     }
 
     public MyLinkedList<Student> getExpelledStudents(String kardexId) {
-        Kardex kardex = SearchService.getKardex(this.school, kardexId);
+        Kardex kardex = (Kardex) SearchService.getIndexedElement(kardexId);
         return SearchService.getStudentsbyState(kardex.getStudents(), Student.State.EXPELLED);
     }
 
     public MyLinkedList<Student> getScholarshipStudents(String kardexId) {
-        Kardex kardex = SearchService.getKardex(this.school, kardexId);
+        Kardex kardex = (Kardex) SearchService.getIndexedElement(kardexId);
         return SearchService.getStudentsbyState(kardex.getStudents(), Student.State.SCHOLARSHIP);
     }
 
     public MyLinkedList<Student> getAverageStudents(String kardexId) {
-        Kardex kardex = SearchService.getKardex(this.school, kardexId);
+        Kardex kardex = (Kardex) SearchService.getIndexedElement(kardexId);
         return SearchService.getStudentsbyState(kardex.getStudents(), Student.State.AVERAGE);
     }
 
     public MyLinkedList<Student> getNotifyStudents(String kardexId) {
-        Kardex kardex = SearchService.getKardex(this.school, kardexId);
+        Kardex kardex = (Kardex) SearchService.getIndexedElement(kardexId);
         return SearchService.getStudentsbyState(kardex.getStudents(), Student.State.EXPELLED);
     }
 
     public boolean importGrades(String kardexId, String subjectId, String pathFile, String nameField, String gradeField) {
-        Kardex kardex = SearchService.getKardex(this.school, kardexId);
-        Subject subject = SearchService.getSubject(kardex.getCourse(), subjectId);
+        Kardex kardex = (Kardex) SearchService.getIndexedElement(kardexId);
+        Subject subject = (Subject) SearchService.getIndexedElement(subjectId);
         MyArrayList<MyHashMap<String, String>> entries = this.dataHandler.read(pathFile);
         if (subject == null || entries == null || entries.isEmpty()) {
             return false;
@@ -205,7 +222,7 @@ public class SchoolService {
     }
 
     public boolean exportGrades(String kardexId, String pathFile, String studentField, String gradeField) {
-        Kardex kardex = SearchService.getKardex(this.school, kardexId);
+        Kardex kardex = (Kardex) SearchService.getIndexedElement(kardexId);
         MyCircularDoublyLinkedList<Grade> grades = GradesService.computeGrades(kardex);
         MyCircularDoublyLinkedList<Grade> sortedGrades = GradesService.sortGrades(grades);
         MyArrayList<MyHashMap<String, String>> entriesToWrite = gradesToEntries(sortedGrades, studentField, gradeField);
@@ -226,27 +243,26 @@ public class SchoolService {
     }
 
     public MyCircularDoublyLinkedList<Student> getStudents(String kardexId) {
-        Kardex kardex = SearchService.getKardex(this.school, kardexId);
+        Kardex kardex = (Kardex) SearchService.getIndexedElement(kardexId);
         return kardex.getStudents();
     }
 
     public MyCircularDoublyLinkedList<Grade> getGrades(String kardexId) {
-        Kardex kardex = SearchService.getKardex(this.school, kardexId);
+        Kardex kardex = (Kardex) SearchService.getIndexedElement(kardexId);
         return GradesService.computeGrades(kardex);
     }
 
     public Teacher getSubjectTeacher(String subjectId, String courseId) {
-        Course course = SearchService.getCourse(this.school, courseId);
-        Subject subject = SearchService.getSubject(course, subjectId);
+        Subject subject = (Subject) SearchService.getIndexedElement(subjectId);
         return subject.getTeacher();
     }
 
     public Teacher getTeacher(String teacherId) {
-        return SearchService.getTeacher(this.school, teacherId);
+        return (Teacher) SearchService.getIndexedElement(teacherId);
     }
 
     public Student getStudent(String studentId) {
-        return SearchService.getStudent(this.school, studentId);
+        return (Student) SearchService.getIndexedElement(studentId);
     }
 
     private <T extends BaseEntity> MyHashMap<String, T> elementsToMap(MyCircularDoublyLinkedList<T> elements) {
@@ -277,8 +293,12 @@ public class SchoolService {
     }
 
     public MyHashMap<String, Subject> getSubjects(String kardexId) {
-        Kardex kardex = SearchService.getKardex(this.school, kardexId);
+        Kardex kardex = (Kardex) SearchService.getIndexedElement(kardexId);
         Course course = kardex.getCourse();
         return elementsToMap(course.getSubjects());
+    }
+
+    public static School getSchool(){
+        return schoolService.school;
     }
 }
