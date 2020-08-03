@@ -116,8 +116,8 @@ public class SchoolService {
 
     public void computeGrades(String kardexId) {
         Kardex kardex = (Kardex) SearchService.getIndexedElement(kardexId);
-        MyCircularDoublyLinkedList<Grade> grades = GradesService.computeGrades(kardex);
-        GradesService.computeStudentStates(kardex, grades);
+        GradesService.computeGrades(kardex);
+        GradesService.computeStudentStates(kardex);
     }
 
     public void updateNotifyList(String kardexId) {
@@ -223,8 +223,8 @@ public class SchoolService {
 
     public boolean exportGrades(String kardexId, String pathFile, String studentField, String gradeField) {
         Kardex kardex = (Kardex) SearchService.getIndexedElement(kardexId);
-        MyCircularDoublyLinkedList<Grade> grades = GradesService.computeGrades(kardex);
-        MyCircularDoublyLinkedList<Grade> sortedGrades = GradesService.sortGrades(grades);
+        GradesService.computeGrades(kardex);
+        MyCircularDoublyLinkedList<Grade> sortedGrades = GradesService.sortGrades();
         MyArrayList<MyHashMap<String, String>> entriesToWrite = gradesToEntries(sortedGrades, studentField, gradeField);
         return dataHandler.write(pathFile, entriesToWrite);
     }
@@ -249,7 +249,8 @@ public class SchoolService {
 
     public MyCircularDoublyLinkedList<Grade> getGrades(String kardexId) {
         Kardex kardex = (Kardex) SearchService.getIndexedElement(kardexId);
-        return GradesService.computeGrades(kardex);
+        GradesService.computeGrades(kardex);
+        return GradesService.sortGrades();
     }
 
     public Teacher getSubjectTeacher(String subjectId, String courseId) {

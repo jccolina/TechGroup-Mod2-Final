@@ -4,7 +4,7 @@ import datastructures.selfbalancedbst.MyColorNode.Color;
 
 public class MyRedBlackBST {
 
-    public static final MyColorNode NULLT = new MyColorNode(-1);
+    public static final MyColorNode NULLT = new MyColorNode(-1, new Object());
     private MyColorNode root;
     private int size;
 
@@ -12,8 +12,8 @@ public class MyRedBlackBST {
         return size;
     }
 
-    public boolean add(int value) {
-        MyColorNode newNode = new MyColorNode(value);
+    public boolean add(double value, Object element) {
+        MyColorNode newNode = new MyColorNode(value, element);
         newNode.setLeft(NULLT);
         newNode.setRight(NULLT);
         boolean result;
@@ -132,6 +132,8 @@ public class MyRedBlackBST {
             } else {
                 return add(cursor.getLeft(), newNode);
             }
+        } else {
+            cursor.add(newNode.getElements());
         }
         return result;
     }
@@ -156,5 +158,10 @@ public class MyRedBlackBST {
         visit(cursor.getLeft(), builder);
         builder.append(cursor.getValue());
         visit(cursor.getRight(), builder);
+    }
+
+    public void clear(){
+        this.root = null;
+        this.size = 0;
     }
 }

@@ -1,22 +1,28 @@
 package datastructures.selfbalancedbst;
 
+import datastructures.arraylist.MyArrayList;
+import datastructures.linkedlist.MyLinkedList;
+
 public class MyColorNode {
     public enum Color{
         RED,
         BLACK
     }
-    private int value;
+    private double value;
+    private MyLinkedList elements;
     private Color color;
     private MyColorNode left;
     private MyColorNode right;
     private MyColorNode parent;
 
-    public MyColorNode(int value) {
+    public MyColorNode(double value, Object element) {
         this.value = value;
         this.color = Color.RED;
+        this.elements = new MyLinkedList();
+        this.elements.add(element);
     }
 
-    public int getValue() {
+    public double getValue() {
         return value;
     }
 
@@ -54,5 +60,13 @@ public class MyColorNode {
 
     public void setParent(MyColorNode parent) {
         this.parent = parent;
+    }
+
+    public void add(MyLinkedList elements){
+        this.elements.addAll(elements);
+    }
+
+    public MyLinkedList getElements(){
+        return this.elements;
     }
 }
