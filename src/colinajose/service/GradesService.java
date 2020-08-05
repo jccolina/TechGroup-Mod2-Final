@@ -12,7 +12,7 @@ import datastructures.selfbalancedbst.MyColorNode;
 import datastructures.selfbalancedbst.MyRedBlackBST;
 
 public class GradesService {
-    private static final MyRedBlackBST gradesTree = new MyRedBlackBST();
+    private static final MyRedBlackBST<Student> gradesTree = new MyRedBlackBST<>();
 
     public static void setGradingScale(Course course, double scholarship, double expelled, double notify) {
         GradingScale gradingScale = new GradingScale(expelled, notify, scholarship);
@@ -67,109 +67,72 @@ public class GradesService {
         double scholarshipGrade = gradingScale.getScholarshipGrade();
         boolean hasScholarship = setScholarShipStudents(scholarshipGrade);
         setExpelledStudents(expelledGrade);
-        setNotifyStudents(expelledGrade, notifyGrade, gradesTree.getRoot());
-        setAverageStudents(notifyGrade, scholarshipGrade, gradesTree.getRoot());
+        setNotifyStudents(expelledGrade, notifyGrade);
+        setAverageStudents(notifyGrade, scholarshipGrade);
         if (!hasScholarship) {
             scholarshipToHigherGrades(expelledGrade);
         }
     }
 
-    private static void scholarshipToHigherGrades(double expelledGrade) {
-        MyColorNode currentNode = gradesTree.getRoot();
-        if(currentNode == MyRedBlackBST.NULLT){
-            return;
-        }
-        while (currentNode.getRight() != MyRedBlackBST.NULLT){
-            currentNode = currentNode.getRight();
-        }
-        if(currentNode.getValue() > expelledGrade){
-            MyLinkedList students = currentNode.getElements();
-            for (int i = 0; i < students.size(); i++) {
-                Student student = (Student) students.get(i);
-                student.setState(Student.State.SCHOLARSHIP);
-            }
+    private static void scholarshipToHigherGrades(double expelledGrade){
+        MyLinkedList<Student> higherStudents = gradesTree.getHigherValuesOver(expelledGrade);
+        for (int i = 0; i < higherStudents.size(); i++) {
+            Student student = higherStudents.get(i);
+            student.setState(Student.State.SCHOLARSHIP);
         }
     }
 
     public static MyCircularDoublyLinkedList<Grade> sortGrades() {
         MyCircularDoublyLinkedList<Grade> sortedGrades = new MyCircularDoublyLinkedList<>();
-        MyColorNode rootGrade = gradesTree.getRoot();
+        MyColorNode<Student> rootGrade = gradesTree.getRoot();
         addSortedGrades(sortedGrades, rootGrade);
         return  sortedGrades;
     }
 
-    private static void addSortedGrades(MyCircularDoublyLinkedList<Grade> sortedGrades, MyColorNode currentNode) {
+    private static void addSortedGrades(MyCircularDoublyLinkedList<Grade> sortedGrades, MyColorNode<Student> currentNode) {
         if (currentNode == MyRedBlackBST.NULLT) return;
 
         addSortedGrades(sortedGrades, currentNode.getRight());
-        MyLinkedList students = currentNode.getElements();
+        MyLinkedList<Student> students = currentNode.getElements();
         for (int i = 0; i < students.size(); i++) {
-            Student student = (Student) students.get(i);
+            Student student = students.get(i);
             sortedGrades.add(new Grade(student, currentNode.getValue()));
         }
         addSortedGrades(sortedGrades, currentNode.getLeft());
     }
 
     public static boolean setScholarShipStudents(double scholarshipGrade){
-        MyColorNode node = gradesTree.getRoot();
-        boolean result = false;
-        while(node != MyRedBlackBST.NULLT){
-            if(node.getValue() >= scholarshipGrade){
-                MyLinkedList students = node.getElements();
-                for (int i = 0; i < students.size(); i++) {
-                    Student student = (Student) students.get(i);
-                    student.setState(Student.State.SCHOLARSHIP);
-                }
-                result = true;
-            }
-            node = node.getRight();
+        MyLinkedList<Student> scholarshipStudents = gradesTree.getValuesGreaterThan(scholarshipGrade);
+        if(scholarshipStudents.isEmpty()) return false;
+        for (int i = 0; i < scholarshipStudents.size(); i++) {
+            Student student = scholarshipStudents.get(i);
+            student.setState(Student.State.SCHOLARSHIP);
         }
-        return result;
+        return true;
+    }
+    public static void setExpelledStudents(double expelledGrade){
+        MyLinkedList<Student> expelledStudents = gradesTree.getValuesLessThan(expelledGrade);
+        if(expelledStudents.isEmpty()) return;
+        for (int i = 0; i < expelledStudents.size(); i++) {
+            Student student = expelledStudents.get(i);
+            student.setState(Student.State.EXPELLED);
+        }
+    }
+    public static void setNotifyStudents(double expelledGrade, double notifyGrade){
+        MyLinkedList<Student> notifyStudents = gradesTree.getValuesLeftOpenInterval(expelledGrade, notifyGrade);
+        if(notifyStudents.isEmpty()) return;
+        for (int i = 0; i < notifyStudents.size(); i++) {
+            Student student = notifyStudents.get(i);
+            student.setState(Student.State.NOTIFY);
+        }
+    }
+    public static void setAverageStudents(double notifyGrade, double scholarshipGrade){
+        MyLinkedList<Student> averageStudents = gradesTree.getValuesOpenInterval(notifyGrade, scholarshipGrade);
+        if(averageStudents.isEmpty()) return;
+        for (int i = 0; i < averageStudents.size(); i++) {
+            Student student = averageStudents.get(i);
+            student.setState(Student.State.AVERAGE);
+        }
     }
 
-    public static void setExpelledStudents(double expelledGrade){
-        MyColorNode node = gradesTree.getRoot();
-        while(node != MyRedBlackBST.NULLT){
-            if(node.getValue() <= expelledGrade){
-                MyLinkedList students = node.getElements();
-                for (int i = 0; i < students.size(); i++) {
-                    Student student = (Student) students.get(i);
-                    student.setState(Student.State.EXPELLED);
-                }
-            }
-            node = node.getLeft();
-        }
-    }
-    public static void setNotifyStudents(double expelledGrade, double notifyGrade, MyColorNode currentNode){
-        if(currentNode == MyRedBlackBST.NULLT) return;
-        if(currentNode.getValue() <= expelledGrade){
-            setNotifyStudents(expelledGrade, notifyGrade, currentNode.getRight());
-        } else if(currentNode.getValue() > notifyGrade){
-            setNotifyStudents(expelledGrade, notifyGrade, currentNode.getLeft());
-        } else {
-            MyLinkedList students = currentNode.getElements();
-            for (int i = 0; i < students.size(); i++) {
-                Student student = (Student) students.get(i);
-                student.setState(Student.State.NOTIFY);
-            }
-            setNotifyStudents(expelledGrade, notifyGrade, currentNode.getRight());
-            setNotifyStudents(expelledGrade, notifyGrade, currentNode.getLeft());
-        }
-    }
-    public static void setAverageStudents(double notifyGrade, double scholarshipGrade, MyColorNode currentNode){
-        if(currentNode == MyRedBlackBST.NULLT) return;
-        if(currentNode.getValue() <= notifyGrade){
-            setAverageStudents(notifyGrade, scholarshipGrade, currentNode.getRight());
-        } else if(currentNode.getValue() >= scholarshipGrade){
-            setAverageStudents(notifyGrade, scholarshipGrade, currentNode.getLeft());
-        } else {
-            MyLinkedList students = currentNode.getElements();
-            for (int i = 0; i < students.size(); i++) {
-                Student student = (Student) students.get(i);
-                student.setState(Student.State.AVERAGE);
-            }
-            setAverageStudents(notifyGrade, scholarshipGrade, currentNode.getRight());
-            setAverageStudents(notifyGrade, scholarshipGrade, currentNode.getLeft());
-        }
-    }
 }

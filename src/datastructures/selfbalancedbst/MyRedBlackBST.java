@@ -1,19 +1,20 @@
 package datastructures.selfbalancedbst;
 
+import datastructures.linkedlist.MyLinkedList;
 import datastructures.selfbalancedbst.MyColorNode.Color;
 
-public class MyRedBlackBST {
+public class MyRedBlackBST<T> {
 
-    public static final MyColorNode NULLT = new MyColorNode(-1, new Object());
-    private MyColorNode root;
+    public static final MyColorNode NULLT = new MyColorNode<>(-1);
+    private MyColorNode<T> root;
     private int size;
 
     public int getSize() {
         return size;
     }
 
-    public boolean add(double value, Object element) {
-        MyColorNode newNode = new MyColorNode(value, element);
+    public boolean add(double value, T element) {
+        MyColorNode<T> newNode = new MyColorNode<>(value, element);
         newNode.setLeft(NULLT);
         newNode.setRight(NULLT);
         boolean result;
@@ -74,7 +75,7 @@ public class MyRedBlackBST {
         root.setColor(Color.BLACK);
     }
 
-    public MyColorNode rightRotate(MyColorNode node) {
+    public MyColorNode<T> rightRotate(MyColorNode<T> node) {
         MyColorNode parent = node.getParent();
         MyColorNode aux = node.getLeft();
         aux.setParent(parent);
@@ -94,9 +95,9 @@ public class MyRedBlackBST {
         return aux;
     }
 
-    protected MyColorNode leftRotate(MyColorNode node) {
-        MyColorNode parent = node.getParent();
-        MyColorNode aux = node.getRight();
+    protected MyColorNode<T> leftRotate(MyColorNode<T> node) {
+        MyColorNode<T> parent = node.getParent();
+        MyColorNode<T> aux = node.getRight();
         aux.setParent(parent);
         node.setRight(aux.getLeft());
         aux.setLeft(node);
@@ -114,7 +115,7 @@ public class MyRedBlackBST {
         return aux;
     }
 
-    private boolean add(MyColorNode cursor, MyColorNode newNode) {
+    private boolean add(MyColorNode<T> cursor, MyColorNode<T> newNode) {
         boolean result = false;
         if (newNode.getValue() > cursor.getValue()) {
             if (cursor.getRight() == NULLT) {
@@ -138,7 +139,7 @@ public class MyRedBlackBST {
         return result;
     }
 
-    public MyColorNode getRoot() {
+    public MyColorNode<T> getRoot() {
         return this.root;
     }
 
@@ -152,7 +153,7 @@ public class MyRedBlackBST {
         return builder.toString();
     }
 
-    private void visit(MyColorNode cursor, StringBuilder builder) {
+    private void visit(MyColorNode<T> cursor, StringBuilder builder) {
         if (cursor == NULLT) return;
 
         visit(cursor.getLeft(), builder);
@@ -163,5 +164,81 @@ public class MyRedBlackBST {
     public void clear(){
         this.root = null;
         this.size = 0;
+    }
+
+    public MyLinkedList<T> getValuesLessThan(double maxValue){
+        MyColorNode<T> currentNode = getRoot();
+        MyLinkedList<T> elementsFound =  new MyLinkedList<>();
+        while(currentNode != NULLT){
+            if(currentNode.getValue() <= maxValue){
+                elementsFound.addAll(currentNode.getElements());
+            }
+            currentNode = currentNode.getLeft();
+        }
+        return elementsFound;
+    }
+
+    public MyLinkedList<T> getValuesGreaterThan(double minValue){
+        MyColorNode<T> currentNode = getRoot();
+        MyLinkedList<T> elementsFound =  new MyLinkedList<>();
+        while(currentNode != NULLT){
+            if(currentNode.getValue() >= minValue){
+                elementsFound.addAll(currentNode.getElements());
+            }
+            currentNode = currentNode.getRight();
+        }
+        return elementsFound;
+    }
+
+    public MyLinkedList<T> getValuesLeftOpenInterval(double maxValue, double minValue){
+        MyLinkedList<T> foundElements =  new MyLinkedList<>();
+        getValuesLeftOpenInterval(maxValue, minValue, getRoot(), foundElements);
+        return foundElements;
+    }
+
+    private void getValuesLeftOpenInterval(double maxValue, double minValue, MyColorNode<T> currentNode, MyLinkedList<T> foundElements){
+        if(currentNode == NULLT) return;
+        if(currentNode.getValue() <= maxValue){
+            getValuesLeftOpenInterval(maxValue, minValue, currentNode.getRight(), foundElements);
+        } else if(currentNode.getValue() > minValue){
+            getValuesLeftOpenInterval(maxValue, minValue, currentNode.getLeft(), foundElements);
+        } else {
+            foundElements.addAll(currentNode.getElements());
+            getValuesLeftOpenInterval(maxValue, minValue, currentNode.getRight(), foundElements);
+            getValuesLeftOpenInterval(maxValue, minValue, currentNode.getLeft(), foundElements);
+        }
+    }
+
+    public MyLinkedList<T> getValuesOpenInterval(double minValue, double maxValue){
+        MyLinkedList<T> foundElements = new MyLinkedList<>();
+        getValuesOpenInterval(minValue, maxValue, getRoot(), foundElements);
+        return foundElements;
+    }
+
+    private void getValuesOpenInterval(double minValue, double maxValue, MyColorNode<T> currentNode, MyLinkedList<T> foundElements){
+        if(currentNode == MyRedBlackBST.NULLT) return;
+        if(currentNode.getValue() <= minValue){
+            getValuesOpenInterval(minValue, maxValue, currentNode.getRight(), foundElements);
+        } else if(currentNode.getValue() >= maxValue){
+            getValuesOpenInterval(minValue, maxValue, currentNode.getLeft(), foundElements);
+        } else {
+            foundElements.addAll(currentNode.getElements());
+            getValuesOpenInterval(minValue, maxValue, currentNode.getRight(), foundElements);
+            getValuesOpenInterval(minValue, maxValue, currentNode.getLeft(), foundElements);
+        }
+    }
+
+    public MyLinkedList<T> getHigherValuesOver(double minValue) {
+        MyColorNode<T> currentNode = getRoot();
+        MyLinkedList<T> foundElements = new MyLinkedList<>();
+        if(currentNode != NULLT){
+            while (currentNode.getRight() != NULLT){
+                currentNode = currentNode.getRight();
+            }
+            if(currentNode.getValue() > minValue){
+                foundElements.addAll(currentNode.getElements());
+            }
+        }
+        return foundElements;
     }
 }
