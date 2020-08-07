@@ -4,6 +4,7 @@ import datastructures.arraylist.MyArrayList;
 import datastructures.hashmap.MyHashMap;
 
 public class MessagesHandler {
+
     public void showMainMenu(){
         System.out.println("=== School System Administrator === \n" +
                 "Please select an option\n" +
@@ -20,18 +21,21 @@ public class MessagesHandler {
                 "11. Save grades\n" +
                 "0. Exit");
     }
+
     public void showInputRequest(String fieldName){
         System.out.println("Please enter " + fieldName + ":");
     }
+
     public void successMessage(){
         System.out.println("Action successfully completed.");
     }
+
     public void failureMessage(){
         System.out.println("Sorry the action could not be completed.");
     }
 
-    public void showWrongOption() {
-        System.out.println("Wrong option, please try again.");
+    public void showWrongValue() {
+        System.out.println("Wrong value, please try again.");
     }
 
     public void showContinueRegister(String element) {

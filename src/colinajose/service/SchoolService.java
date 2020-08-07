@@ -179,22 +179,22 @@ public class SchoolService {
         }
     }
 
-    public MyLinkedList<Student> getExpelledStudents(String kardexId) {
+    private MyLinkedList<Student> getExpelledStudents(String kardexId) {
         Kardex kardex = (Kardex) SearchService.getIndexedElement(kardexId);
         return SearchService.getStudentsbyState(kardex.getStudents(), Student.State.EXPELLED);
     }
 
-    public MyLinkedList<Student> getScholarshipStudents(String kardexId) {
+    private MyLinkedList<Student> getScholarshipStudents(String kardexId) {
         Kardex kardex = (Kardex) SearchService.getIndexedElement(kardexId);
         return SearchService.getStudentsbyState(kardex.getStudents(), Student.State.SCHOLARSHIP);
     }
 
-    public MyLinkedList<Student> getAverageStudents(String kardexId) {
+    private MyLinkedList<Student> getAverageStudents(String kardexId) {
         Kardex kardex = (Kardex) SearchService.getIndexedElement(kardexId);
         return SearchService.getStudentsbyState(kardex.getStudents(), Student.State.AVERAGE);
     }
 
-    public MyLinkedList<Student> getNotifyStudents(String kardexId) {
+    private MyLinkedList<Student> getNotifyStudents(String kardexId) {
         Kardex kardex = (Kardex) SearchService.getIndexedElement(kardexId);
         return SearchService.getStudentsbyState(kardex.getStudents(), Student.State.EXPELLED);
     }
@@ -258,7 +258,7 @@ public class SchoolService {
         return subject.getTeacher();
     }
 
-    public Teacher getTeacher(String teacherId) {
+    private Teacher getTeacher(String teacherId) {
         return (Teacher) SearchService.getIndexedElement(teacherId);
     }
 

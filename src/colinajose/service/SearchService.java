@@ -9,11 +9,13 @@ import datastructures.hashmap.MyHashMap;
 import datastructures.linkedlist.MyLinkedList;
 
 public class SearchService {
+
     private static final MyHashMap<String, BaseEntity> indexTable = new MyHashMap<>();
 
     public static <T extends BaseEntity> void indexElement(String id, T element){
         indexTable.put(id, element);
     }
+
     public static BaseEntity getIndexedElement(String id){
         return indexTable.get(id);
     }
