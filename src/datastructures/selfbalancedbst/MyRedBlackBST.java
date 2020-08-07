@@ -169,43 +169,51 @@ public class MyRedBlackBST<T> {
     public MyLinkedList<T> getValuesLessThan(double maxValue){
         MyColorNode<T> currentNode = getRoot();
         MyLinkedList<T> elementsFound =  new MyLinkedList<>();
-        while(currentNode != NULLT){
-            if(currentNode.getValue() <= maxValue){
-                elementsFound.addAll(currentNode.getElements());
-            }
-            currentNode = currentNode.getLeft();
-        }
+        getValuesLessThan(maxValue, getRoot(), elementsFound);
         return elementsFound;
+    }
+
+    private void getValuesLessThan(double maxValue, MyColorNode currentNode, MyLinkedList<T> elementsFound){
+        if(currentNode == NULLT) return;
+        if(currentNode.getValue() <= maxValue){
+            elementsFound.addAll(currentNode.getElements());
+            getValuesLessThan(maxValue, currentNode.getRight(), elementsFound);
+        }
+        getValuesLessThan(maxValue, currentNode.getLeft(), elementsFound);
     }
 
     public MyLinkedList<T> getValuesGreaterThan(double minValue){
         MyColorNode<T> currentNode = getRoot();
         MyLinkedList<T> elementsFound =  new MyLinkedList<>();
-        while(currentNode != NULLT){
-            if(currentNode.getValue() >= minValue){
-                elementsFound.addAll(currentNode.getElements());
-            }
-            currentNode = currentNode.getRight();
-        }
+        getValuesGreaterThan(minValue, currentNode, elementsFound);
         return elementsFound;
     }
 
-    public MyLinkedList<T> getValuesLeftOpenInterval(double maxValue, double minValue){
+    private void getValuesGreaterThan(double minValue, MyColorNode currentNode, MyLinkedList<T> elementsFound){
+        if(currentNode == NULLT) return;
+        if(currentNode.getValue() >= minValue){
+            elementsFound.addAll(currentNode.getElements());
+            getValuesGreaterThan(minValue, currentNode.getLeft(), elementsFound);
+        }
+        getValuesGreaterThan(minValue, currentNode.getRight(), elementsFound);
+    }
+
+    public MyLinkedList<T> getValuesLeftOpenInterval(double minValue, double maxValue){
         MyLinkedList<T> foundElements =  new MyLinkedList<>();
-        getValuesLeftOpenInterval(maxValue, minValue, getRoot(), foundElements);
+        getValuesLeftOpenInterval(minValue, maxValue, getRoot(), foundElements);
         return foundElements;
     }
 
-    private void getValuesLeftOpenInterval(double maxValue, double minValue, MyColorNode<T> currentNode, MyLinkedList<T> foundElements){
+    private void getValuesLeftOpenInterval(double minValue, double maxValue, MyColorNode<T> currentNode, MyLinkedList<T> foundElements){
         if(currentNode == NULLT) return;
-        if(currentNode.getValue() <= maxValue){
-            getValuesLeftOpenInterval(maxValue, minValue, currentNode.getRight(), foundElements);
-        } else if(currentNode.getValue() > minValue){
-            getValuesLeftOpenInterval(maxValue, minValue, currentNode.getLeft(), foundElements);
+        if(currentNode.getValue() <= minValue){
+            getValuesLeftOpenInterval(minValue, maxValue, currentNode.getRight(), foundElements);
+        } else if(currentNode.getValue() > maxValue){
+            getValuesLeftOpenInterval(minValue, maxValue, currentNode.getLeft(), foundElements);
         } else {
             foundElements.addAll(currentNode.getElements());
-            getValuesLeftOpenInterval(maxValue, minValue, currentNode.getRight(), foundElements);
-            getValuesLeftOpenInterval(maxValue, minValue, currentNode.getLeft(), foundElements);
+            getValuesLeftOpenInterval(minValue, maxValue, currentNode.getRight(), foundElements);
+            getValuesLeftOpenInterval(minValue, maxValue, currentNode.getLeft(), foundElements);
         }
     }
 

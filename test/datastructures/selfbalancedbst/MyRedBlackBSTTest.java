@@ -1,8 +1,11 @@
 package datastructures.selfbalancedbst;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+import datastructures.linkedlist.MyLinkedList;
 import datastructures.selfbalancedbst.MyColorNode.Color;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class MyRedBlackBSTTest {
@@ -35,7 +38,7 @@ public class MyRedBlackBSTTest {
         myTree.add(2, new Object());
         myTree.add(4, new Object());
 
-        assertEquals("[234678910]", myTree.toString());
+        assertEquals("[2.03.04.06.07.08.09.010.0]", myTree.toString());
     }
 
     @Test
@@ -87,5 +90,160 @@ public class MyRedBlackBSTTest {
         }
 
         assertEquals(leftCount, rightCount);
+    }
+
+    @Test
+    public void testGetValuesGreaterThanRightSide() {
+        MyRedBlackBST myTree = new MyRedBlackBST();
+        myTree.add(50, "luis");
+        myTree.add(30, "brenda");
+        myTree.add(40, "carlos");
+        myTree.add(20, "saul");
+        myTree.add(55, "ana");
+        // Expected values:
+        myTree.add(60, "maria");
+        myTree.add(65, "cecilia");
+        myTree.add(70, "javier");
+        myTree.add(80, "armando");
+        myTree.add(75, "rosario");
+        MyLinkedList actual = myTree.getValuesGreaterThan(60);
+
+        assertEquals( 5, actual.size());
+        assertTrue(actual.contains("javier"));
+        assertTrue(actual.contains("armando"));
+        assertTrue(actual.contains("rosario"));
+        assertTrue(actual.contains("maria"));
+        assertTrue(actual.contains("cecilia"));
+    }
+
+    @Test
+    public void testGetValuesGreaterThanLeftSide() {
+        MyRedBlackBST myTree = new MyRedBlackBST();
+        myTree.add(30, "brenda");
+        myTree.add(20, "saul");
+        // Expected values:
+        myTree.add(50, "luis");
+        myTree.add(40, "carlos");
+        myTree.add(55, "ana");
+        myTree.add(60, "maria");
+        myTree.add(65, "cecilia");
+        MyLinkedList actual = myTree.getValuesGreaterThan(40);
+
+        assertEquals( 5, actual.size());
+        assertTrue(actual.contains("maria"));
+        assertTrue(actual.contains("cecilia"));
+        assertTrue(actual.contains("luis"));
+        assertTrue(actual.contains("carlos"));
+        assertTrue(actual.contains("ana"));
+    }
+
+    @Test
+    public void testGetValuesLessThanLeftSide() {
+        MyRedBlackBST myTree = new MyRedBlackBST();
+        myTree.add(60, "maria");
+        myTree.add(65, "cecilia");
+        myTree.add(70, "javier");
+        myTree.add(75, "rosario");
+        // Expected values:
+        myTree.add(55, "ana");
+        myTree.add(50, "luis");
+        myTree.add(40, "carlos");
+        myTree.add(30, "brenda");
+        MyLinkedList actual = myTree.getValuesLessThan(55);
+
+        assertEquals( 4, actual.size());
+        assertTrue(actual.contains("ana"));
+        assertTrue(actual.contains("luis"));
+        assertTrue(actual.contains("carlos"));
+        assertTrue(actual.contains("brenda"));
+    }
+
+    @Test
+    public void testGetValuesLessThanRightSide() {
+        MyRedBlackBST myTree = new MyRedBlackBST();
+        myTree.add(70, "javier");
+        myTree.add(75, "rosario");
+        // Expected values:
+        myTree.add(65, "cecilia");
+        myTree.add(60, "maria");
+        myTree.add(55, "ana");
+        myTree.add(50, "luis");
+        myTree.add(40, "carlos");
+        myTree.add(30, "brenda");
+        MyLinkedList actual = myTree.getValuesLessThan(65);
+
+        assertEquals( 6, actual.size());
+        assertTrue(actual.contains("maria"));
+        assertTrue(actual.contains("cecilia"));
+        assertTrue(actual.contains("ana"));
+        assertTrue(actual.contains("luis"));
+        assertTrue(actual.contains("carlos"));
+        assertTrue(actual.contains("brenda"));
+    }
+
+    @Test
+    public void getValuesLeftOpenInterval() {
+        MyRedBlackBST myTree = new MyRedBlackBST();
+        myTree.add(75, "rosario");
+        myTree.add(30, "brenda");
+        // Expected values:
+        myTree.add(70, "javier");
+        myTree.add(60, "maria");
+        myTree.add(50, "luis");
+        myTree.add(55, "ana");
+        myTree.add(40, "carlos");
+        myTree.add(65, "cecilia");
+        MyLinkedList actual = myTree.getValuesLeftOpenInterval(30, 70);
+
+        assertEquals( 6, actual.size());
+        assertTrue(actual.contains("javier"));
+        assertTrue(actual.contains("maria"));
+        assertTrue(actual.contains("luis"));
+        assertTrue(actual.contains("ana"));
+        assertTrue(actual.contains("carlos"));
+        assertTrue(actual.contains("cecilia"));
+    }
+
+    @Test
+    public void getValuesOpenInterval() {
+        MyRedBlackBST myTree = new MyRedBlackBST();
+        myTree.add(75, "rosario");
+        myTree.add(30, "brenda");
+        myTree.add(70, "javier");
+        // Expected values:
+        myTree.add(60, "maria");
+        myTree.add(50, "luis");
+        myTree.add(55, "ana");
+        myTree.add(40, "carlos");
+        myTree.add(65, "cecilia");
+        MyLinkedList actual = myTree.getValuesOpenInterval(30, 70);
+
+        assertEquals( 5, actual.size());
+        assertTrue(actual.contains("maria"));
+        assertTrue(actual.contains("luis"));
+        assertTrue(actual.contains("ana"));
+        assertTrue(actual.contains("carlos"));
+        assertTrue(actual.contains("cecilia"));
+    }
+
+    @Test
+    public void getHigherValuesOver() {
+        MyRedBlackBST myTree = new MyRedBlackBST();
+        myTree.add(75, "rosario");
+        myTree.add(30, "brenda");
+        myTree.add(70, "javier");
+        myTree.add(60, "maria");
+        myTree.add(50, "luis");
+        myTree.add(55, "ana");
+        myTree.add(40, "carlos");
+        myTree.add(65, "cecilia");
+        // Expected values:
+        myTree.add(80, "raul");
+        myTree.add(80, "jorge");
+        MyLinkedList actual = myTree.getHigherValuesOver(30);
+
+        assertEquals( 2, actual.size());
+        assertTrue(actual.contains("raul"));
+        assertTrue(actual.contains("jorge"));
     }
 }
