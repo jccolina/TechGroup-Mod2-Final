@@ -50,7 +50,7 @@ public class GradesService {
         setNotifyStudents(expelledGrade, notifyGrade);
         setAverageStudents(notifyGrade, scholarshipGrade);
         if (!hasScholarship) {
-            scholarshipToHigherGrades(expelledGrade);
+            scholarshipToHigherGrades(notifyGrade);
         }
     }
 

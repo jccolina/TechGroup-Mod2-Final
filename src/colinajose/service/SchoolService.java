@@ -196,7 +196,7 @@ public class SchoolService {
 
     private MyLinkedList<Student> getNotifyStudents(String kardexId) {
         Kardex kardex = (Kardex) SearchService.getIndexedElement(kardexId);
-        return SearchService.getStudentsbyState(kardex.getStudents(), Student.State.EXPELLED);
+        return SearchService.getStudentsbyState(kardex.getStudents(), Student.State.NOTIFY);
     }
 
     public boolean importGrades(String kardexId, String subjectId, String pathFile, String nameField, String gradeField) {
