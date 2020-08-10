@@ -18,7 +18,8 @@ public class MessagesHandler {
                 "8. Submit grades\n" +
                 "9. Set grading scale\n" +
                 "10. Notify parents\n" +
-                "11. Save grades\n" +
+                "11. Export grades\n" +
+                "12. See Students by Course\n" +
                 "0. Exit");
     }
 
@@ -46,11 +47,18 @@ public class MessagesHandler {
         System.out.println("Not possible to continue because of lack of " + type);
     }
 
-    public <T> void showItems(MyHashMap<String, T> items, MyArrayList<String> keys, String type) {
+    public void showSelectMessage(String type){
         System.out.println("Select " + type + ":");
+    }
+
+    public <T> void showItems(MyHashMap<String, T> items, MyArrayList<String> keys) {
         for (int i = 0; i < keys.size(); i++) {
             T item = items.get(keys.get(i));
             System.out.println((i + 1) + ". " + item.toString());
         }
+    }
+
+    public void showListMessage(String type) {
+        System.out.println("List of " + type + ":");
     }
 }

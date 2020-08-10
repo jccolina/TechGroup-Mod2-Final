@@ -1,5 +1,6 @@
 package colinajose.presentation;
 
+import colinajose.model.people.Student;
 import colinajose.service.SchoolService;
 import datastructures.arraylist.MyArrayList;
 import datastructures.hashmap.MyHashMap;
@@ -27,6 +28,8 @@ public class ActionPicker {
     private static final String NOTIFY_GRADE = "notify grade";
     private static final String SCHOLARSHIP_GRADE = "scholarship grade";
     private static final String PARENT = "Parent";
+    private static final String STUDENTS = "Students";
+    private static final String OWNER = "Owner";
     private static final String DEVICE = "Device";
     private static final String Y_N_PATTERN = "(?i)[y|n]";
     private static final String NO_VALUE = "N";
@@ -75,6 +78,9 @@ public class ActionPicker {
                 break;
             case "11":
                 saveGrades();
+                break;
+            case "12":
+                displayStudents();
                 break;
             case "0":
                 System.exit(0);
@@ -131,7 +137,7 @@ public class ActionPicker {
     private void createDevice() {
         boolean continueRegister = true;
         while(continueRegister){
-            String parentId = selectItem(this.schoolService.getParents(), PARENT);
+            String parentId = selectItem(this.schoolService.getParents(), OWNER);
             if(parentId.equals(EMPTY_STRING)) return;
             String[] fields = {PHONE};
             MyHashMap<String, String> textInputs = this.inputHandler.getTextInputs(fields, this.messagesHandler);
@@ -176,9 +182,9 @@ public class ActionPicker {
         this.messagesHandler.showInputRequest(FILE_PATH);
         String path = this.inputHandler.getTextInput();
         boolean isImported = this.schoolService.importGrades(kardexId, subjectId, path, FULL_NAME, GRADE);
+        this.schoolService.computeGrades(kardexId);
+        this.schoolService.updateNotifyList(kardexId);
         if(isImported){
-            this.schoolService.computeGrades(kardexId);
-            this.schoolService.updateNotifyList(kardexId);
             this.messagesHandler.successMessage();
         } else {
             this.messagesHandler.failureMessage();
@@ -214,11 +220,21 @@ public class ActionPicker {
         }
     }
 
+
+    private void displayStudents() {
+        String kardexId = selectItem(this.schoolService.getKardexes(), COURSE);
+        if(kardexId.equals(EMPTY_STRING)) return;
+        MyHashMap<String, Student> students = this.schoolService.getStudents(kardexId);
+        this.messagesHandler.showListMessage(STUDENTS);
+        this.messagesHandler.showItems(students, students.getKeys());
+    }
+
     private <T> String selectItem(MyHashMap<String, T> items, String type){
         int item;
         if(items.size() > 0) {
             MyArrayList<String> keys = items.getKeys();
-            this.messagesHandler.showItems(items, keys, type);
+            this.messagesHandler.showSelectMessage(type);
+            this.messagesHandler.showItems(items, keys);
             item = this.inputHandler.getIntegerBetween(0, items.size() + 1, this.messagesHandler) - 1;
             return keys.get(item);
         } else {

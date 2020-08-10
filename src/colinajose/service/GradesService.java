@@ -62,23 +62,28 @@ public class GradesService {
     }
 
     private static Grade computeGrade(MyCircularDoublyLinkedList<Subject> subjects, Student student) {
-        double average = 0;
+        double totalAverage = 0;
         if(subjects.size() > 0) {
             for (int i = 0; i < subjects.size(); i++) {
                 MyCircularDoublyLinkedList<Grade> grades = subjects.get(i).getGrades();
                 if (grades.size() > 0) {
+                    int numberOfGrades = 0;
+                    double subjectAverage = 0;
                     for (int j = 0; j < grades.size(); j++) {
                         Grade grade = grades.get(j);
                         if (grade.getStudent().equals(student)) {
-                            average += grade.getFinalGrade();
-                            break;
+                            subjectAverage += grade.getFinalGrade();
+                            numberOfGrades++;
                         }
+                    }
+                    if(numberOfGrades > 0){
+                        totalAverage += subjectAverage/numberOfGrades;
                     }
                 }
             }
-            average /= subjects.size();
+            totalAverage /= subjects.size();
         }
-        return new Grade(student, average);
+        return new Grade(student, totalAverage);
     }
 
     private static void scholarshipToHigherGrades(double expelledGrade){

@@ -242,9 +242,9 @@ public class SchoolService {
         return entries;
     }
 
-    public MyCircularDoublyLinkedList<Student> getStudents(String kardexId) {
+    public MyHashMap<String, Student> getStudents(String kardexId) {
         Kardex kardex = (Kardex) SearchService.getIndexedElement(kardexId);
-        return kardex.getStudents();
+        return elementsToMap(kardex.getStudents());
     }
 
     public MyCircularDoublyLinkedList<Grade> getGrades(String kardexId) {

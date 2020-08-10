@@ -42,4 +42,8 @@ public class Student extends Person {
         this.parents = parents;
     }
 
+    @Override
+    public String toString(){
+        return getName() + ", CI: " + getCi() + ", State: " + getState().toString();
+    }
 }
