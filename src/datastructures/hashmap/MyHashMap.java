@@ -1,5 +1,6 @@
 package datastructures.hashmap;
 
+import datastructures.arraylist.MyArrayList;
 import datastructures.circulardoublylinkedlist.MyCircularDoublyLinkedList;
 
 public class MyHashMap<K, V> {
@@ -145,5 +146,33 @@ public class MyHashMap<K, V> {
         int hashKey = getHashCode(key) % this.indexSize;
         MyEntry<K, V> newEntry = new MyEntry<>(key, null);
         return this.index[hashKey].remove(newEntry);
+    }
+
+    public MyArrayList<K> getKeys(){
+        MyArrayList<K> keys =  new MyArrayList<>();
+        if(this.size > 0){
+            for (int i = 0; i < this.indexSize; i++) {
+                MyCircularDoublyLinkedList<MyEntry<K, V>> entryList = get(i);
+                for (int j = 0; j < entryList.size(); j++) {
+                    MyEntry<K, V> entry = entryList.get(j);
+                    keys.add(entry.getKey());
+                }
+            }
+        }
+        return keys;
+    }
+
+    public MyArrayList<V> getValues(){
+        MyArrayList<V> values =  new MyArrayList<>();
+        if(this.size > 0){
+            for (int i = 0; i < this.indexSize; i++) {
+                MyCircularDoublyLinkedList<MyEntry<K, V>> entryList = get(i);
+                for (int j = 0; j < entryList.size(); j++) {
+                    MyEntry<K, V> entry = entryList.get(j);
+                    values.add(entry.getValue());
+                }
+            }
+        }
+        return values;
     }
 }
